@@ -6,7 +6,7 @@
 /*   By: vlugand- <vlugand-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/26 12:45:04 by vlugand-          #+#    #+#             */
-/*   Updated: 2022/01/28 14:43:49 by vlugand-         ###   ########.fr       */
+/*   Updated: 2022/01/28 15:48:50 by vlugand-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define VECTOR_ITERATOR_HPP
 
 // https://www.cplusplus.com/reference/iterator/RandomAccessIterator/
+// https://www.boost.org/sgi/stl/RandomAccessIterator.html
 
 namespace ft
 {
@@ -68,7 +69,7 @@ namespace ft
 			vector_iterator & operator++() // Prefix increment
 			{ 
 				_ptr++;
-				return (*this); // incremented value is returned
+				return (*this); // incremented value is returned (hence the use of reference in prototype)
 			}
 	
 			vector_iterator operator++(int) // Postfix increment
@@ -83,7 +84,7 @@ namespace ft
 			vector_iterator & operator--() // Prefix decrement
 			{ 
 				_ptr--;
-				return (*this); // decremented value is returned
+				return (*this); // decremented value is returned (hence the use of reference in prototype)
 			}
 			
 			vector_iterator operator--(int) // Postfix decrement
@@ -122,13 +123,29 @@ namespace ft
 
 			vector_iterator<T> & operator+=(difference_type n) // [a += n]
 			{ 
-				_ptr += n;
+				// If n == 0, this is a null operation
+				if (n < 0) // If n < 0, equivalent to executing --i n times. 
+				{
+					while (n < 0)
+					{
+						operator--();
+						n++;
+					}
+				}
+				else // If n > 0, equivalent to executing ++i n times.
+				{
+					while (n > 0)
+					{
+						operator++();
+						n--;
+					}
+				}
 				return (*this);
 			}
 			
 			vector_iterator<T> & operator-=(difference_type n) // [a -= n]
 			{
-				_ptr -= n;
+				_ptr += (-n);
 				return (*this);
 			}
 

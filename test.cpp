@@ -6,24 +6,39 @@
 /*   By: vlugand- <vlugand-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/26 14:32:00 by vlugand-          #+#    #+#             */
-/*   Updated: 2022/01/26 14:44:11 by vlugand-         ###   ########.fr       */
+/*   Updated: 2022/01/28 17:21:52 by vlugand-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <iostream>     // std::cout
-#include <iterator>     // std::iterator_traits
-#include <typeinfo>     // typeid
-#include "iterator_traits.hpp"
+// vector::reserve
+#include <iostream>
+#include <vector>
 
-int main()
+int main ()
 {
-	// STD
-	typedef std::iterator_traits<int *> stdtraits;
-	if (typeid(stdtraits::iterator_category) == typeid(std::random_access_iterator_tag))
-		std::cout << "[std] int * is a random access iterator" << std::endl;
-	// FT
-		typedef ft::iterator_traits<int *> fttraits;
-	if (typeid(fttraits::iterator_category) == typeid(std::random_access_iterator_tag))
-		std::cout << "[ft] int * is a random access iterator" << std::endl;
-	return (0);
+  std::vector<int>::size_type sz;
+
+  std::vector<int> foo;
+  sz = foo.capacity();
+  std::cout << "making foo grow:\n";
+  for (int i=0; i<100; ++i) {
+    foo.push_back(i);
+    if (sz!=foo.capacity()) {
+      sz = foo.capacity();
+      std::cout << "capacity changed: " << sz << '\n';
+    }
+  }
+
+  std::vector<int> bar;
+  sz = bar.capacity();
+  bar.reserve(100);   // this is the only difference with foo above
+  std::cout << "making bar grow:\n";
+  for (int i=0; i<101; ++i) {
+    bar.push_back(i);
+    if (sz!=bar.capacity()) {
+      sz = bar.capacity();
+      std::cout << "capacity changed: " << sz << '\n';
+    }
+  }
+  return 0;
 }
