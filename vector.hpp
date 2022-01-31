@@ -6,7 +6,7 @@
 /*   By: vlugand- <vlugand-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 13:16:39 by vlugand-          #+#    #+#             */
-/*   Updated: 2022/01/28 17:19:47 by vlugand-         ###   ########.fr       */
+/*   Updated: 2022/01/31 20:03:12 by vlugand-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,39 +44,65 @@ namespace ft
 			/* ************************************************************************** */
 
 			// Empty container constructor (default constructor): Constructs an empty container, with no elements ( = a vector of size 0)
-			explicit vector (const allocator_type& alloc = allocator_type()) : _data(NULL), _size(0), _max_size(alloc.max_size()), _alloc(alloc), _capacity(0)
+			explicit vector(const allocator_type& alloc = allocator_type()) : _array(NULL), _size(0), _max_size(alloc.max_size()), _alloc(alloc), _capacity(0)
 			{
 				return ;
 			}
 
 			// Fill constructor: Constructs a container with n elements. Each element is a copy of val.
-			explicit vector (size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()) : _size(n), _max_size(alloc.max_size()), _alloc(alloc), _capacity(n)
+			explicit vector(size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()) : _size(n), _max_size(alloc.max_size()), _alloc(alloc), _capacity(n)
 			{
-				_data = _alloc.allocate(n);
+				_array = _alloc.allocate(n);
 				for (size_type i = 0; i < _size; i++)
-					_alloc.construct(&_data[i], val);
+					_alloc.construct(&_array[i], val);
 				return ;
 			};
 
 			// Range constructor: Constructs a container with as many elements as the range [first,last), with each element constructed from its corresponding element in that range, in the same order.
 			template <class InputIterator>
-			vector (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type())
+			vector(InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type()) : _max_size(alloc.max_size())
 			{
-				size_t	i;
+				size_type	i = 0;
 
 				for (InputIterator it = first; it != last; it++)
 					i++;
-				
+				_array = alloc.allocate(i);
+				_size = i;
+				_capacity = i;
+				i = 0;
+				for (InputIterator it = first; it != last; it++)
+				{
+					_alloc.construct(&_array[i], *it);
+					i++;
+				}
 				return ;
 			}
 
 			// Copy constructor: Constructs a container with a copy of each of the elements in x, in the same order.
-			vector (const vector& x) : _alloc(x._alloc), _size(x._size), _capacity(x._capacity), _max_size(x.max_size())
+			vector(const vector& x) : _alloc(x._alloc), _size(x._size), _capacity(x._capacity), _max_size(x.max_size())
 			{
-				_data = _alloc.allocate(_capacity);
+				_array = _alloc.allocate(_capacity);
 				for (size_type i = 0; i < _size; i++)
-					_data = _alloc.construct(&_data[i], x[i]);
+					_alloc.construct(&_array[i], x[i]);
 				return ;
+			};
+
+			~vector()
+			{
+				for (size_type i = 0; i < _size; i++)
+					_alloc.destroy(&_array[i]);
+				_alloc.deallocate(_array, _capacity);
+			}
+
+			/* ************************************************************************** */
+			/*                     		  OPERATOR OVERLOADS                              */
+			/* ************************************************************************** */
+
+			vector & operator=(const vector & x) // pas sur que ca soit good ici
+			{
+				~vector();
+				*this = vector(x);
+				return (*this);
 			};
 
 			/* ************************************************************************** */
@@ -84,21 +110,166 @@ namespace ft
 			/* ************************************************************************** */
 
 
-			iterator begin() { return iterator(_data); }
-			iterator end() { return iterator(_data + size); }
+			iterator	begin() { return iterator(_array); }
+			iterator	end() { return iterator(_array + _size); }
+			// missing const and rev it
 
+			/* ************************************************************************** */
+			/*                     			   CAPACITY                                   */
+			/* ************************************************************************** */
+
+			size_type	size() const
+			{
+				return (_size);
+			}
+
+			size_type	max_size() const
+			{
+				return (_max_size);
+			}
+
+			void		resize(size_type n, value_type val = value_type())
+			{
+				if (n < _size)
+				{
+					for (size_type i = n ; i < _size ; i++)	
+						_alloc.destroy(&_array[i]);
+				}
+				else if (n > _size && n < _capacity)
+				{
+					for (size_type i = _size; i < n; i++)
+						_alloc.construct(&_array[i], val);
+				}
+				else if (n > _size && n > _capacity)
+				{
+					if (n > _capacity * 2)
+						reserve(n);
+					else
+						reserve(_capacity * 2);
+					for (size_type i = _size; i < n; i++)
+						_alloc.construct(&_array[i], val);
+				}
+				_size = n;
+				return ;
+			}
+
+			size_type	capacity() const
+			{
+				return (_capacity);
+			}
+
+			bool		empty() const
+			{
+				return _size == 0 ? true : false;
+			}
+
+			void		reserve(size_type n)
+			{
+				if (n > _capacity)
+				{
+					value_type *tmp = _alloc.allocate(n);
+					for (size_type i = 0; i < _size; i++)
+					{
+						_alloc.construct(&tmp[i], _array[i]);
+						_alloc.destroy(&_array[i]);
+					}
+					_alloc.deallocate(&_array, _capacity);
+					_capacity = n;
+					_array = tmp;
+				}
+				else if (n > _max_size)
+					throw (std::length_error("vector"));
+				return ;
+			}
+
+			/* ************************************************************************** */
+			/*                     		    ELEMENT ACCESS                                */
+			/* ************************************************************************** */
+
+			reference operator[](size_type n)
+			{
+				return (_array[n]);
+			}
+
+			const_reference operator[](size_type n) const
+			{
+				return (_array[n]);
+			}
+
+			reference at(size_type n)
+			{
+				if (n >= _size)
+					throw (std::out_of_range("vector"));
+				return (_array[n]);
+			}
+
+			const_reference at(size_type n) const
+			{
+				if (n >= _size)
+					throw (std::out_of_range("vector"));
+				return (_array[n]);
+			}
+
+			reference front()
+			{
+				return (_array[0]);
+			}
+
+			const_reference front() const
+			{
+				return (_array[0]);
+			}
+
+			reference back()
+			{
+				return (_array[size - 1]);
+			}
+
+			const_reference back() const
+			{
+				return (_array[size - 1]);
+			}
+
+
+			/* ************************************************************************** */
+			/*                     		       MODIFIERS                                  */
+			/* ************************************************************************** */
+
+			template <class InputIterator>
+  			void assign(InputIterator first, InputIterator last)
+			{
+				size_type n = 0;
+				size_type i = 0;
+				
+				for (InputIterator it = first; it != last; it++)
+					n++;
+				for (size_type i = 0; i < _size; i++)
+					alloc.destroy(&_array[i]);
+				if (n > _capacity)
+				{
+					_alloc.deallocate(&_array, _capacity);
+					_array = _alloc.allocate(n);
+					_capacity = n;
+				}
+				for (InputIterator it = first; it != last; it++)
+				{
+					_alloc.construct(&_array[i], *it);
+					i++;
+				}
+				_size = n;
+			}
 
 		private:
 		
 			/* ************************************************************************** */
-			/*                     			  VARIABLES                                   */
+			/*                     		       VARIABLES                                  */
 			/* ************************************************************************** */
 
-			value_type				*_data;
+			value_type				*_array;
 			allocator_type			_alloc;
 			size_type				_size;
 			size_type				_capacity;
-			const static size_type	_max_size;
+			const size_type			_max_size;
 	};
 
 	

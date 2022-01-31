@@ -6,7 +6,7 @@
 /*   By: vlugand- <vlugand-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/26 12:45:04 by vlugand-          #+#    #+#             */
-/*   Updated: 2022/01/28 15:48:50 by vlugand-         ###   ########.fr       */
+/*   Updated: 2022/01/31 18:02:56 by vlugand-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,6 @@ namespace ft
 			bool operator!=(const vector_iterator & rhs) const { return (_ptr != rhs._ptr); }
 			bool operator<=(const vector_iterator & rhs) const { return (_ptr <= rhs._ptr); }
 			bool operator>=(const vector_iterator & rhs) const { return (_ptr >= rhs._ptr); }
-			bool operator==(const vector_iterator & rhs) const { return (_ptr == rhs._ptr); }
 			bool operator<(const vector_iterator & rhs) const { return (_ptr < rhs._ptr); }
 			bool operator>(const vector_iterator & rhs) const { return (_ptr > rhs._ptr); }
 
