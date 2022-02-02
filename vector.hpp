@@ -6,7 +6,7 @@
 /*   By: vlugand- <vlugand-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 13:16:39 by vlugand-          #+#    #+#             */
-/*   Updated: 2022/01/31 20:03:12 by vlugand-         ###   ########.fr       */
+/*   Updated: 2022/02/02 16:25:56 by vlugand-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,7 +173,7 @@ namespace ft
 						_alloc.construct(&tmp[i], _array[i]);
 						_alloc.destroy(&_array[i]);
 					}
-					_alloc.deallocate(&_array, _capacity);
+					_alloc.deallocate(_array, _capacity);
 					_capacity = n;
 					_array = tmp;
 				}
@@ -222,12 +222,12 @@ namespace ft
 
 			reference back()
 			{
-				return (_array[size - 1]);
+				return (_array[_size - 1]);
 			}
 
 			const_reference back() const
 			{
-				return (_array[size - 1]);
+				return (_array[_size - 1]);
 			}
 
 
@@ -236,7 +236,7 @@ namespace ft
 			/* ************************************************************************** */
 
 			template <class InputIterator>
-  			void assign(InputIterator first, InputIterator last)
+  			void	assign(InputIterator first, InputIterator last)
 			{
 				size_type n = 0;
 				size_type i = 0;
@@ -244,10 +244,10 @@ namespace ft
 				for (InputIterator it = first; it != last; it++)
 					n++;
 				for (size_type i = 0; i < _size; i++)
-					alloc.destroy(&_array[i]);
+					_alloc.destroy(&_array[i]);
 				if (n > _capacity)
 				{
-					_alloc.deallocate(&_array, _capacity);
+					_alloc.deallocate(_array, _capacity);
 					_array = _alloc.allocate(n);
 					_capacity = n;
 				}
@@ -257,6 +257,68 @@ namespace ft
 					i++;
 				}
 				_size = n;
+				return ;
+			}
+
+			void	assign(size_type n, const value_type& val)
+			{
+				for (size_type i = 0; i < _size; i++)
+					_alloc.destroy(&_array[i]);
+				if (n > _capacity)
+				{
+					_alloc.deallocate(_array, _capacity);
+					_array = _alloc.allocate(n);
+					_capacity = n;
+				}
+				for (size_type i = 0; i < n; i++)
+					_alloc.construct(&_array[i], val);
+				_size = n;
+				return ;
+			}
+
+			void	push_back(const value_type &val)
+			{
+				if (_size == _capacity)
+				{
+					if (_capacity == 0)
+						_capacity = 1;
+					reserve(_capacity * 2);
+				}
+				_alloc.construct(&_array[_size], val);
+				_size++;
+				return ;
+			}
+
+			void	pop_back()
+			{
+				_alloc.destroy(&_array[_size - 1]);
+				--_size;
+				return ;
+			}
+
+			iterator	insert(iterator position, size_type n, const value_type& val)
+			{
+				size_type	pos_index = 0;
+			
+				for (iterator it = begin(); it != position; it = it + 1)
+					pos_index++;
+				std::cout << "pos_index = " << pos_index << std::endl; 
+				if (_size + n > _capacity)
+				{
+					if (_size + n < _capacity * 2)
+						reserve(_capacity * 2);
+					else
+						reserve(_size + n);
+				}
+				for (size_type i = _size + n; i > pos_index; i--)
+				{
+					_alloc.construct(&_array[i], _array[i - n]);
+					_alloc.destroy(&_array[i - n]);
+				}
+				for (size_type i = pos_index; i < pos_index + n; i++)
+					_alloc.construct(&_array[i], val);
+				_size += n;
+				return (position + n);
 			}
 
 		private:
