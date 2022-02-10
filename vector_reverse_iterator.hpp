@@ -1,25 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   vector_iterator.hpp                                :+:      :+:    :+:   */
+/*   vector_reverse_iterator.hpp                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: vlugand- <vlugand-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/01/26 12:45:04 by vlugand-          #+#    #+#             */
-/*   Updated: 2022/02/10 11:59:20 by vlugand-         ###   ########.fr       */
+/*   Created: 2022/02/10 12:10:27 by vlugand-          #+#    #+#             */
+/*   Updated: 2022/02/10 15:57:24 by vlugand-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef VECTOR_ITERATOR_HPP
-# define VECTOR_ITERATOR_HPP
+#ifndef VECTOR_REVERSE_ITERATOR_HPP
+# define VECTOR_REVERSE_ITERATOR_HPP
 
-// https://www.cplusplus.com/reference/iterator/RandomAccessIterator/
-// https://www.boost.org/sgi/stl/RandomAccessIterator.html
+// http://www.cplusplus.com/reference/iterator/reverse_iterator/
 
 namespace ft
 {
-	template <typename T>
-	class vector_iterator
+	template <typename iterator>
+	class vector_reverse_iterator
 	{
 		public:
 
@@ -27,6 +26,7 @@ namespace ft
 		/*                     			   ALIASES                                    */
 		/* ************************************************************************** */
 
+			typedef iterator								iterator_type;
 			typedef T         								value_type;
 			typedef std::random_access_iterator_tag  		iterator_category;
 			typedef std::ptrdiff_t 							difference_type;
@@ -54,6 +54,8 @@ namespace ft
 			vector_iterator(const vector_iterator & src) : _ptr(src._ptr) {}
 			~vector_iterator() {}
 
+			iterator_type base() const { return _ptr; }
+
 		/* ************************************************************************** */
 		/*                     		OPERATORS OVERLOADS                               */
 		/* ************************************************************************** */
@@ -68,7 +70,7 @@ namespace ft
 
 			vector_iterator & operator++() // Prefix increment
 			{ 
-				_ptr++;
+				_ptr--;
 				return (*this); // incremented value is returned (hence the use of reference in prototype)
 			}
 	
@@ -77,13 +79,13 @@ namespace ft
 				vector_iterator tmp;
 
 				tmp = *this;
-				++(*this);
+				--(*this);
 				return (tmp); // value before incrementation is returned
 			}
 			
 			vector_iterator & operator--() // Prefix decrement
 			{ 
-				_ptr--;
+				_ptr++;
 				return (*this); // decremented value is returned (hence the use of reference in prototype)
 			}
 			
@@ -92,18 +94,17 @@ namespace ft
 				vector_iterator tmp;
 
 				tmp = *this;
-				--(*this);
+				++(*this);
 				return (tmp); // value before decrementation is returned
 			}
 
 		// Comparison operators:
-
 			bool operator==(const vector_iterator & rhs) const { return (_ptr == rhs._ptr); }
 			bool operator!=(const vector_iterator & rhs) const { return (_ptr != rhs._ptr); }
-			bool operator<=(const vector_iterator & rhs) const { return (_ptr <= rhs._ptr); }
-			bool operator>=(const vector_iterator & rhs) const { return (_ptr >= rhs._ptr); }
-			bool operator<(const vector_iterator & rhs) const { return (_ptr < rhs._ptr); }
-			bool operator>(const vector_iterator & rhs) const { return (_ptr > rhs._ptr); }
+			bool operator<=(const vector_iterator & rhs) const { return (_ptr >= rhs._ptr); }
+			bool operator>=(const vector_iterator & rhs) const { return (_ptr <= rhs._ptr); }
+			bool operator<(const vector_iterator & rhs) const { return (_ptr > rhs._ptr); }
+			bool operator>(const vector_iterator & rhs) const { return (_ptr < rhs._ptr); }
 
 		// Arithmetics operators:  (a and b are objects of this iterator type, n is a value of its difference type)
 
@@ -157,6 +158,19 @@ namespace ft
 				return (o);
 			}
 	};
+
+	template< class Iterator1, class Iterator2 >
+	bool operator==( const ft::reverse_iterator<Iterator1>& lhs, const ft::reverse_iterator<Iterator2>& rhs ){ return (lhs.base() == rhs.base()); }
+	template< class Iterator1, class Iterator2 >
+	bool operator!=( const ft::reverse_iterator<Iterator1>& lhs, const ft::reverse_iterator<Iterator2>& rhs ){ return (lhs.base() != rhs.base()); }
+	template< class Iterator1, class Iterator2 >
+	bool operator<( const ft::reverse_iterator<Iterator1>& lhs, const ft::reverse_iterator<Iterator2>& rhs ){ return (lhs.base() > rhs.base()); }
+	template< class Iterator1, class Iterator2 >
+	bool operator<=( const ft::reverse_iterator<Iterator1>& lhs, const ft::reverse_iterator<Iterator2>& rhs ){ return (lhs.base() >= rhs.base()); }
+	template< class Iterator1, class Iterator2 >
+	bool operator>( const ft::reverse_iterator<Iterator1>& lhs, const ft::reverse_iterator<Iterator2>& rhs ){ return (lhs.base() < rhs.base()); }
+	template< class Iterator1, class Iterator2 >
+	bool operator>=( const ft::reverse_iterator<Iterator1>& lhs, const ft::reverse_iterator<Iterator2>& rhs ){ return (lhs.base() <= rhs.base()); }
 }
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: vlugand- <vlugand-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 13:16:39 by vlugand-          #+#    #+#             */
-/*   Updated: 2022/02/02 16:25:56 by vlugand-         ###   ########.fr       */
+/*   Updated: 2022/02/10 14:39:19 by vlugand-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,20 +37,21 @@ namespace ft
 			typedef ptrdiff_t									difference_type;
 			typedef size_t										size_type;
 
-			typedef vector_iterator<value_type>              	iterator;
+			typedef vector_iterator<T>      		        	iterator;
+			typedef vector_iterator<T const>					const_iterator;
 
 			/* ************************************************************************** */
 			/*                     			CONSTRUCTORS                                  */
 			/* ************************************************************************** */
 
 			// Empty container constructor (default constructor): Constructs an empty container, with no elements ( = a vector of size 0)
-			explicit vector(const allocator_type& alloc = allocator_type()) : _array(NULL), _size(0), _max_size(alloc.max_size()), _alloc(alloc), _capacity(0)
+			explicit vector(const allocator_type& alloc = allocator_type()) : _array(NULL), _alloc(alloc), _size(0), _capacity(0), _max_size(alloc.max_size())
 			{
 				return ;
 			}
 
 			// Fill constructor: Constructs a container with n elements. Each element is a copy of val.
-			explicit vector(size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()) : _size(n), _max_size(alloc.max_size()), _alloc(alloc), _capacity(n)
+			explicit vector(size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()) : _alloc(alloc), _size(n), _capacity(n), _max_size(alloc.max_size())
 			{
 				_array = _alloc.allocate(n);
 				for (size_type i = 0; i < _size; i++)
