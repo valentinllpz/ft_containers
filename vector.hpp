@@ -6,7 +6,7 @@
 /*   By: vlugand- <vlugand-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 13:16:39 by vlugand-          #+#    #+#             */
-/*   Updated: 2022/02/10 14:39:19 by vlugand-         ###   ########.fr       */
+/*   Updated: 2022/02/11 13:34:33 by vlugand-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 #include "common.hpp"
 #include "vector_iterator.hpp"
+#include "vector_reverse_iterator.hpp"
 
 namespace ft
 {
@@ -30,25 +31,26 @@ namespace ft
 			typedef T											value_type;
 			typedef Alloc										allocator_type;
 			typedef typename allocator_type::reference			reference;
-			typedef typename allocator_type::pointer			pointer;
 			typedef typename allocator_type::const_reference	const_reference;
+			typedef typename allocator_type::pointer			pointer;
 			typedef typename allocator_type::const_pointer		const_pointer;
 			
+			typedef vector_iterator<T>      		        	iterator;
+			typedef vector_iterator<T const>					const_iterator;
+			typedef reverse_vector_iterator<T>					reverse_iterator;
+			typedef reverse_vector_iterator<T const>			const_reverse_iterator;
+
 			typedef ptrdiff_t									difference_type;
 			typedef size_t										size_type;
 
-			typedef vector_iterator<T>      		        	iterator;
-			typedef vector_iterator<T const>					const_iterator;
+			
 
 			/* ************************************************************************** */
 			/*                     			CONSTRUCTORS                                  */
 			/* ************************************************************************** */
 
 			// Empty container constructor (default constructor): Constructs an empty container, with no elements ( = a vector of size 0)
-			explicit vector(const allocator_type& alloc = allocator_type()) : _array(NULL), _alloc(alloc), _size(0), _capacity(0), _max_size(alloc.max_size())
-			{
-				return ;
-			}
+			explicit vector(const allocator_type& alloc = allocator_type()) : _array(NULL), _alloc(alloc), _size(0), _capacity(0), _max_size(alloc.max_size()) {}
 
 			// Fill constructor: Constructs a container with n elements. Each element is a copy of val.
 			explicit vector(size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()) : _alloc(alloc), _size(n), _capacity(n), _max_size(alloc.max_size())
@@ -61,7 +63,7 @@ namespace ft
 
 			// Range constructor: Constructs a container with as many elements as the range [first,last), with each element constructed from its corresponding element in that range, in the same order.
 			template <class InputIterator>
-			vector(InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type()) : _max_size(alloc.max_size())
+			vector(typename ft::enable_if<!std::is_integral<InputIterator>::value, InputIterator>::type, InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type()) : _max_size(alloc.max_size())
 			{
 				size_type	i = 0;
 

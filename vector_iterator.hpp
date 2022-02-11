@@ -6,12 +6,14 @@
 /*   By: vlugand- <vlugand-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/26 12:45:04 by vlugand-          #+#    #+#             */
-/*   Updated: 2022/02/10 11:59:20 by vlugand-         ###   ########.fr       */
+/*   Updated: 2022/02/11 13:00:39 by vlugand-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef VECTOR_ITERATOR_HPP
 # define VECTOR_ITERATOR_HPP
+
+#include "utils.hpp"
 
 // https://www.cplusplus.com/reference/iterator/RandomAccessIterator/
 // https://www.boost.org/sgi/stl/RandomAccessIterator.html
@@ -27,11 +29,11 @@ namespace ft
 		/*                     			   ALIASES                                    */
 		/* ************************************************************************** */
 
-			typedef T         								value_type;
-			typedef std::random_access_iterator_tag  		iterator_category;
-			typedef std::ptrdiff_t 							difference_type;
-			typedef value_type *							pointer;
-			typedef value_type & 							reference;
+			typedef typename iterator_traits<T>::difference_type		difference_type;
+			typedef typename iterator_traits<T>::value_type				value_type;
+			typedef typename iterator_traits<T>::pointer				pointer;
+			typedef typename iterator_traits<T>::reference				reference;
+			typedef typename iterator_traits<T>::iterator_category		iterator_category;
 		
 		protected: 
 
@@ -111,7 +113,7 @@ namespace ft
 			friend vector_iterator<T> operator+(difference_type n, const vector_iterator & rhs) { return (n + rhs._ptr); } // [n + a]
 			vector_iterator<T> operator+(difference_type n) const { return (_ptr + n); } // [a + n]
 			vector_iterator<T> operator-(difference_type n) const { return (_ptr - n); } // [a - n]
-			vector_iterator<T> operator-(const vector_iterator & rhs) const { return (_ptr - rhs._ptr); } // [a - b]
+			difference_type operator-(const vector_iterator & rhs) const { return (_ptr - rhs._ptr); } // [a - b]
 
 			/* when (=) is involved we need to return a pointer to the current modified instance (allows chaining a = b = c) */
 			vector_iterator & operator=(vector_iterator const & rhs) // [a = b]
