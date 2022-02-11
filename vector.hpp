@@ -6,7 +6,7 @@
 /*   By: vlugand- <vlugand-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 13:16:39 by vlugand-          #+#    #+#             */
-/*   Updated: 2022/02/11 13:34:33 by vlugand-         ###   ########.fr       */
+/*   Updated: 2022/02/11 17:58:03 by vlugand-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,8 @@ namespace ft
 			
 			typedef vector_iterator<T>      		        	iterator;
 			typedef vector_iterator<T const>					const_iterator;
-			typedef reverse_vector_iterator<T>					reverse_iterator;
-			typedef reverse_vector_iterator<T const>			const_reverse_iterator;
+			typedef vector_reverse_iterator<T>					reverse_iterator;
+			typedef vector_reverse_iterator<T const>			const_reverse_iterator;
 
 			typedef ptrdiff_t									difference_type;
 			typedef size_t										size_type;
@@ -63,7 +63,7 @@ namespace ft
 
 			// Range constructor: Constructs a container with as many elements as the range [first,last), with each element constructed from its corresponding element in that range, in the same order.
 			template <class InputIterator>
-			vector(typename ft::enable_if<!std::is_integral<InputIterator>::value, InputIterator>::type, InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type()) : _max_size(alloc.max_size())
+			vector(InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type(), typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type* dummy = 0) : _max_size(alloc.max_size())
 			{
 				size_type	i = 0;
 
@@ -337,7 +337,8 @@ namespace ft
 			const size_type			_max_size;
 	};
 
-	
+	// MISSING NON MEMBER OVERLOADS
+	// LESS NOT UNDERSTOOD
 };
 
 #endif
