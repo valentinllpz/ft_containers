@@ -6,7 +6,7 @@
 /*   By: vlugand- <vlugand-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/26 12:45:04 by vlugand-          #+#    #+#             */
-/*   Updated: 2022/02/11 13:00:39 by vlugand-         ###   ########.fr       */
+/*   Updated: 2022/02/12 16:46:23 by vlugand-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,12 +28,12 @@ namespace ft
 		/* ************************************************************************** */
 		/*                     			   ALIASES                                    */
 		/* ************************************************************************** */
-
-			typedef typename iterator_traits<T>::difference_type		difference_type;
-			typedef typename iterator_traits<T>::value_type				value_type;
-			typedef typename iterator_traits<T>::pointer				pointer;
-			typedef typename iterator_traits<T>::reference				reference;
-			typedef typename iterator_traits<T>::iterator_category		iterator_category;
+			
+			typedef std::ptrdiff_t						difference_type;
+			typedef T									value_type;
+			typedef value_type *						pointer;
+			typedef value_type &						reference;
+			typedef std::random_access_iterator_tag		iterator_category;
 		
 		protected: 
 
@@ -55,6 +55,12 @@ namespace ft
 			vector_iterator(pointer ptr) : _ptr(ptr) {}
 			vector_iterator(const vector_iterator & src) : _ptr(src._ptr) {}
 			~vector_iterator() {}
+
+		/* ************************************************************************** */
+		/*                     		  BASE PTR GETTER                                 */
+		/* ************************************************************************** */
+
+			pointer base() { return _ptr; }
 
 		/* ************************************************************************** */
 		/*                     		OPERATORS OVERLOADS                               */

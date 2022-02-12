@@ -6,7 +6,7 @@
 /*   By: vlugand- <vlugand-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 13:16:39 by vlugand-          #+#    #+#             */
-/*   Updated: 2022/02/11 17:58:03 by vlugand-         ###   ########.fr       */
+/*   Updated: 2022/02/12 17:10:14 by vlugand-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ namespace ft
 
 			// Range constructor: Constructs a container with as many elements as the range [first,last), with each element constructed from its corresponding element in that range, in the same order.
 			template <class InputIterator>
-			vector(InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type(), typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type* dummy = 0) : _max_size(alloc.max_size())
+			vector(InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type(), typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type* = 0) : _max_size(alloc.max_size())
 			{
 				size_type	i = 0;
 
@@ -113,9 +113,19 @@ namespace ft
 			/* ************************************************************************** */
 
 
-			iterator	begin() { return iterator(_array); }
-			iterator	end() { return iterator(_array + _size); }
-			// missing const and rev it
+			iterator					begin() { return iterator(_array); }
+			const_iterator				begin() const {return const_iterator(_array); }
+
+			iterator					end() { return iterator(_array + _size); }
+			const_iterator				end() const { return const_iterator(_array + _size); }
+
+			reverse_iterator 			rbegin() { return reverse_iterator(end()); }
+			const_reverse_iterator 		rbegin() const { return const_reverse_iterator(end()); }
+
+			reverse_iterator 			rend() { return reverse_iterator(begin()); }
+			const_reverse_iterator 		rend() const { return const_reverse_iterator(begin()); }
+
+
 
 			/* ************************************************************************** */
 			/*                     			   CAPACITY                                   */
@@ -239,7 +249,7 @@ namespace ft
 			/* ************************************************************************** */
 
 			template <class InputIterator>
-  			void	assign(InputIterator first, InputIterator last)
+  			void	assign(InputIterator first, InputIterator last, typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type* = 0)
 			{
 				size_type n = 0;
 				size_type i = 0;
@@ -299,13 +309,21 @@ namespace ft
 				return ;
 			}
 
-			iterator	insert(iterator position, size_type n, const value_type& val)
+			iterator insert(iterator position, const value_type& val)
+			{
+				difference_type diff;
+				
+				diff = position.base() - _array;
+				insert(position, 1, val);
+				return (begin() + diff);
+			}
+
+			void	insert(iterator position, size_type n, const value_type& val)
 			{
 				size_type	pos_index = 0;
 			
-				for (iterator it = begin(); it != position; it = it + 1)
+				for (iterator it = begin(); it != position; it++)
 					pos_index++;
-				std::cout << "pos_index = " << pos_index << std::endl; 
 				if (_size + n > _capacity)
 				{
 					if (_size + n < _capacity * 2)
@@ -321,8 +339,42 @@ namespace ft
 				for (size_type i = pos_index; i < pos_index + n; i++)
 					_alloc.construct(&_array[i], val);
 				_size += n;
-				return (position + n);
 			}
+
+			template <class InputIterator>
+    		void	insert(iterator position, InputIterator first, InputIterator last, typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type* = 0)
+			{
+				size_type		n = 0;
+				size_type		pos_index = 0;
+				InputIterator 	it;
+				
+				for (it = first; it != last; it++)
+					n++;
+				for (iterator it = begin(); it != position; it++)
+					pos_index++;
+				if (_size + n > _capacity)
+				{
+					if (_size + n < _capacity * 2)
+						reserve(_capacity * 2);
+					else
+						reserve(_size + n);
+				}
+				for (size_type i = _size + n; i > pos_index; i--)
+				{
+					_alloc.construct(&_array[i], _array[i - n]);
+					_alloc.destroy(&_array[i - n]);
+				}
+				it = first;
+				for (size_type i = pos_index; i < pos_index + n; i++)
+				{
+					_alloc.construct(&_array[i], *it);
+					it++;
+				}
+				_size += n;
+				return ;
+			}
+
+			
 
 		private:
 		
@@ -337,7 +389,7 @@ namespace ft
 			const size_type			_max_size;
 	};
 
-	// MISSING NON MEMBER OVERLOADS
+	// MISSING NON MEMBER OVERLOADS + erase + swap + clear
 	// LESS NOT UNDERSTOOD
 };
 
