@@ -6,7 +6,7 @@
 /*   By: vlugand- <vlugand-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 12:32:16 by vlugand-          #+#    #+#             */
-/*   Updated: 2022/02/12 12:33:22 by vlugand-         ###   ########.fr       */
+/*   Updated: 2022/02/14 16:45:49 by vlugand-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,6 @@ namespace ft
 	struct is_integral<unsigned int> { const static bool value = true; };
 	template<>
 	struct is_integral<unsigned long int> { const static bool value = true; };
-	template<>
-	struct is_integral<unsigned long long int> { const static bool value = true; };
 
 
 	// https://en.wikibooks.org/wiki/More_C%2B%2B_Idioms/enable-if
@@ -146,7 +144,7 @@ namespace ft
 
 	template <class T> struct less : binary_function <T, T, bool>
 	{
-		bool operator() (const T& x, const T& y) const {return x<y;}
+		bool operator() (const T& x, const T& y) const { return x < y; }
 	};
 }
 

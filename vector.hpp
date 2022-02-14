@@ -6,7 +6,7 @@
 /*   By: vlugand- <vlugand-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 13:16:39 by vlugand-          #+#    #+#             */
-/*   Updated: 2022/02/12 17:10:14 by vlugand-         ###   ########.fr       */
+/*   Updated: 2022/02/14 18:03:21 by vlugand-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,20 +28,20 @@ namespace ft
 			/*                     			   ALIASES                                    */
 			/* ************************************************************************** */
 
-			typedef T											value_type;
-			typedef Alloc										allocator_type;
-			typedef typename allocator_type::reference			reference;
-			typedef typename allocator_type::const_reference	const_reference;
-			typedef typename allocator_type::pointer			pointer;
-			typedef typename allocator_type::const_pointer		const_pointer;
+			typedef T												value_type;
+			typedef Alloc											allocator_type;
+			typedef typename allocator_type::reference				reference;
+			typedef typename allocator_type::const_reference		const_reference;
+			typedef typename allocator_type::pointer				pointer;
+			typedef typename allocator_type::const_pointer			const_pointer;
 			
-			typedef vector_iterator<T>      		        	iterator;
-			typedef vector_iterator<T const>					const_iterator;
-			typedef vector_reverse_iterator<T>					reverse_iterator;
-			typedef vector_reverse_iterator<T const>			const_reverse_iterator;
+			typedef ft::vector_iterator<value_type>      	   	 	iterator;
+			typedef ft::vector_iterator<value_type const>			const_iterator;
+			typedef ft::vector_reverse_iterator<iterator>			reverse_iterator;
+			typedef ft::vector_reverse_iterator<const_iterator>		const_reverse_iterator;
 
-			typedef ptrdiff_t									difference_type;
-			typedef size_t										size_type;
+			typedef std::ptrdiff_t									difference_type;
+			typedef size_t											size_type;
 
 			
 
@@ -63,13 +63,13 @@ namespace ft
 
 			// Range constructor: Constructs a container with as many elements as the range [first,last), with each element constructed from its corresponding element in that range, in the same order.
 			template <class InputIterator>
-			vector(InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type(), typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type* = 0) : _max_size(alloc.max_size())
+			vector(InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type(), typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type* = 0) : _array(NULL), _alloc(alloc),  _size(0), _capacity(0), _max_size(alloc.max_size())
 			{
 				size_type	i = 0;
 
 				for (InputIterator it = first; it != last; it++)
 					i++;
-				_array = alloc.allocate(i);
+				_array = _alloc.allocate(i);
 				_size = i;
 				_capacity = i;
 				i = 0;
@@ -101,10 +101,21 @@ namespace ft
 			/*                     		  OPERATOR OVERLOADS                              */
 			/* ************************************************************************** */
 
-			vector & operator=(const vector & x) // pas sur que ca soit good ici
+			vector & operator=(const vector & x)
 			{
-				~vector();
-				*this = vector(x);
+				if (_size < x._size)
+				{
+					reserve(x._size);
+					resize(x._size);
+				}
+				else
+				{
+					for (size_type i = 0; i < _size; i++)
+						_alloc.destroy(&_array[i]);
+					_size = x._size;
+				}
+				for (size_type i = 0; i < _size; i++)
+					_alloc.construct(&_array[i], x._array[i]);
 				return (*this);
 			};
 
@@ -374,23 +385,103 @@ namespace ft
 				return ;
 			}
 
-			
+			iterator	erase(iterator position) { return (erase(position, position + 1));	}
 
-		private:
+			iterator	erase(iterator first, iterator last)
+			{
+				size_type	first_index = 0;
+				size_type	last_index = 0;
+				size_type	last_to_end = 0;
+				
+				for (iterator it = begin(); it != first; it++)
+					first_index++;
+				for (iterator it = begin(); it != last; it++)
+					last_index++;
+				for (iterator it = last; it != end(); it++)
+					last_to_end++;
+				for (size_type i = first_index, j = 0; i < _size; i++, j++)
+				{
+					_alloc.destroy(&_array[i]);
+					_alloc.construct(&_array[i], _array[last_index + j]);
+				}
+				for (size_type i = first_index + last_to_end; i < _size; i++)
+					_alloc.destroy(&_array[i]);
+				_size -= last_index - first_index;
+				return (first);
+			}
+
+			void	swap(vector& x)
+			{
+				pointer					_array_tmp = x._array;
+				allocator_type			_alloc_tmp = x._alloc;
+				size_type				_size_tmp = x._size;
+				size_type				_capacity_tmp = x._capacity;
+				
+				x._array = _array;
+				x._alloc = _alloc;
+				x._size = _size;
+				x._capacity = _capacity;
+				_array = _array_tmp;
+				_alloc = _alloc_tmp;
+				_size = _size_tmp;
+				_capacity = _capacity_tmp;
+				return ;
+			}
+
+			void	clear() { resize(0); }
+
+			/* ************************************************************************** */
+			/*                     		       ALLOCATOR                                  */
+			/* ************************************************************************** */
+
+			allocator_type		get_allocator() const { return (_alloc); };
+
+			private:
 		
 			/* ************************************************************************** */
 			/*                     		       VARIABLES                                  */
 			/* ************************************************************************** */
 
-			value_type				*_array;
+			pointer					_array;
 			allocator_type			_alloc;
 			size_type				_size;
 			size_type				_capacity;
 			const size_type			_max_size;
 	};
 
-	// MISSING NON MEMBER OVERLOADS + erase + swap + clear
-	// LESS NOT UNDERSTOOD
+		/* ************************************************************************** */
+		/*                     	 NON-MEMBER FUNCTION OVERLOADS                        */
+		/* ************************************************************************** */
+
+		template <class T, class Alloc>
+		bool operator== (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+		{
+			if (lhs.size() != rhs.size())
+				return (false);
+			return (ft::equal(lhs.begin(), lhs.end(), rhs.begin()));
+		}
+		
+		template <class T, class Alloc>
+		bool operator!= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) { return (!(lhs == rhs)); }
+
+		template <class T, class Alloc>
+		bool operator< (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+		{
+			return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
+		}
+
+		template <class T, class Alloc>
+		bool operator<= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs){ return (lhs < rhs || lhs == rhs); }
+
+		template <class T, class Alloc>
+		bool operator> (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) { return (rhs < lhs); }
+		
+		template <class T, class Alloc>
+		bool operator>= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) {return (lhs > rhs || lhs == rhs);}
+	
+		template <class T, class Alloc>
+		void swap (vector<T,Alloc>& x, vector<T,Alloc>& y) { x.swap(y); }
+
 };
 
 #endif

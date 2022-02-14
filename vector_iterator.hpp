@@ -6,7 +6,7 @@
 /*   By: vlugand- <vlugand-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/26 12:45:04 by vlugand-          #+#    #+#             */
-/*   Updated: 2022/02/12 16:46:23 by vlugand-         ###   ########.fr       */
+/*   Updated: 2022/02/14 18:08:03 by vlugand-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,9 @@ namespace ft
 		/* ************************************************************************** */
 		/*                     		OPERATORS OVERLOADS                               */
 		/* ************************************************************************** */
+
+		// Implicit conversion to const: (https://en.cppreference.com/w/cpp/language/cast_operator)
+		operator vector_iterator<value_type const>() const { return vector_iterator<value_type const>(_ptr); }
 
 		// Dereferencement operators:
 

@@ -6,7 +6,7 @@
 /*   By: vlugand- <vlugand-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/26 14:32:00 by vlugand-          #+#    #+#             */
-/*   Updated: 2022/02/12 17:11:33 by vlugand-         ###   ########.fr       */
+/*   Updated: 2022/02/14 17:19:05 by vlugand-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,46 +18,17 @@
 
 int main ()
 {
-  ft::vector<int> myvector (3,100);
-  ft::vector<int>::iterator it;
+  std::vector<int> foo (3,100);   // three ints with a value of 100
+  std::vector<int> bar (4,200);   // five ints with a value of 200
 
-  std::cout << "1 myvector contains:";
-  for (ft::vector<int>::iterator it2 =myvector.begin(); it2<myvector.end(); it2++)
-    std::cout << ' ' << *it2;
-  std::cout << '\n';
-
-  it = myvector.begin();
-  it = myvector.insert ( it , 200 );
-
-  std::cout << "2 myvector contains:";
-  for (ft::vector<int>::iterator it2 =myvector.begin(); it2<myvector.end(); it2++)
-    std::cout << ' ' << *it2;
-  std::cout << '\n';
-
-  myvector.insert (it,2,300);
-
-  std::cout << "3 myvector contains:";
-  for (ft::vector<int>::iterator it2 =myvector.begin(); it2<myvector.end(); it2++)
-    std::cout << ' ' << *it2;
-  std::cout << '\n';
-  // "it" no longer valid, get a new one:
-  it = myvector.begin();
-
-  ft::vector<int> anothervector (2,400);
-  myvector.insert (it+2,anothervector.begin(),anothervector.end());
-
-  std::cout << "4 myvector contains:";
-  for (ft::vector<int>::iterator it2 =myvector.begin(); it2<myvector.end(); it2++)
-    std::cout << ' ' << *it2;
-  std::cout << '\n';
-
-  int myarray [] = { 501,502,503 };
-  myvector.insert (myvector.begin(), myarray, myarray+3);
-
-  std::cout << "5 myvector contains:";
-  for (ft::vector<int>::iterator it2 =myvector.begin(); it2<myvector.end(); it2++)
-    std::cout << ' ' << *it2;
-  std::cout << '\n';
+	bar.reserve(50);
+	std::cout << "foo.size() = " << foo.size() << " foo.capacity() = " << foo.capacity() <<  std::endl; 
+	std::cout << "bar.size() = " << bar.size() << " bar.capacity() = " << bar.capacity() << std::endl;
+	foo = bar;
+	std::cout << "AFTER\nfoo.size() = " << foo.size() << " foo.capacity() = " << foo.capacity() << std::endl;
+	std::cout << "bar.size() = " << bar.size() << " bar.capacity() = " << bar.capacity() << std::endl;
 
   return 0;
 }
+
+
