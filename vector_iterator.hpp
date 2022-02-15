@@ -6,7 +6,7 @@
 /*   By: vlugand- <vlugand-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/26 12:45:04 by vlugand-          #+#    #+#             */
-/*   Updated: 2022/02/14 18:08:03 by vlugand-         ###   ########.fr       */
+/*   Updated: 2022/02/15 18:36:01 by vlugand-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ namespace ft
 		/*                     		  BASE PTR GETTER                                 */
 		/* ************************************************************************** */
 
-			pointer base() { return _ptr; }
+			pointer base() const { return _ptr; }
 
 		/* ************************************************************************** */
 		/*                     		OPERATORS OVERLOADS                               */
@@ -73,7 +73,7 @@ namespace ft
 
 			reference operator*() const { return *_ptr; }
 			pointer operator->() { return _ptr; }	
-			value_type operator[](size_t i) { return *(_ptr + i); }
+			reference operator[](size_t i) { return *(_ptr + i); }
 
 		// Increment / decrement operators:
 
@@ -168,6 +168,24 @@ namespace ft
 				return (o);
 			}
 	};
+
+	/* ************************************************************************** */
+	/*                     	 NON-MEMBER FUNCTION OVERLOADS                        */
+	/* ************************************************************************** */
+
+	template<typename it1, typename it2>
+	bool operator==(const vector_iterator<it1>& a, const vector_iterator<it2>& b) { return (a.base() == b.base()); }
+	template<typename it1, typename it2>
+	bool operator!=(const vector_iterator<it1>& a, const vector_iterator<it2>& b) { return (a.base() != b.base()); }
+	template<typename it1, typename it2>
+	bool operator<(const vector_iterator<it1>& a, const vector_iterator<it2>& b) { return (a.base() < b.base()); }
+	template<typename it1, typename it2>
+	bool operator<=(const vector_iterator<it1>& a, const vector_iterator<it2>& b) { return (a.base() <= b.base()); }
+	template<typename it1, typename it2>
+	bool operator>(const vector_iterator<it1>& a, const vector_iterator<it2>& b) { return (a.base() > b.base()); }
+	template<typename it1, typename it2>
+	bool operator>=(const vector_iterator<it1>& a, const vector_iterator<it2>& b) { return (a.base() >= b.base()); }
+
 }
 
 #endif

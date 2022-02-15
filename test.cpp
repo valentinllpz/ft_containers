@@ -6,7 +6,7 @@
 /*   By: vlugand- <vlugand-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/26 14:32:00 by vlugand-          #+#    #+#             */
-/*   Updated: 2022/02/14 17:19:05 by vlugand-         ###   ########.fr       */
+/*   Updated: 2022/02/15 18:43:34 by vlugand-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,18 +15,28 @@
 #include <vector>
 #include <stdexcept>
 #include "vector.hpp"
+#include <list>
 
+#define TESTED_NAMESPACE ft
+#define TESTED_TYPE int
 int main ()
 {
-  std::vector<int> foo (3,100);   // three ints with a value of 100
-  std::vector<int> bar (4,200);   // five ints with a value of 200
+	std::list<TESTED_TYPE> lst;
+	std::list<TESTED_TYPE>::iterator lst_it;
+	for (int i = 1; i < 5; ++i)
+		lst.push_back(i * 3);
 
-	bar.reserve(50);
-	std::cout << "foo.size() = " << foo.size() << " foo.capacity() = " << foo.capacity() <<  std::endl; 
-	std::cout << "bar.size() = " << bar.size() << " bar.capacity() = " << bar.capacity() << std::endl;
-	foo = bar;
-	std::cout << "AFTER\nfoo.size() = " << foo.size() << " foo.capacity() = " << foo.capacity() << std::endl;
-	std::cout << "bar.size() = " << bar.size() << " bar.capacity() = " << bar.capacity() << std::endl;
+	TESTED_NAMESPACE::vector<TESTED_TYPE> vct(lst.begin(), lst.end());
+	// printSize(vct);
+
+	lst_it = lst.begin();
+	for (int i = 1; lst_it != lst.end(); ++i)
+		*lst_it++ = i * 5;
+	vct.assign(lst.begin(), lst.end());
+	// printSize(vct);
+
+	vct.insert(vct.end(), lst.rbegin(), lst.rend());
+	// printSize(vct);
 
   return 0;
 }

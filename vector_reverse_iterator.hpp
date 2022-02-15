@@ -6,7 +6,7 @@
 /*   By: vlugand- <vlugand-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 12:10:27 by vlugand-          #+#    #+#             */
-/*   Updated: 2022/02/11 13:16:42 by vlugand-         ###   ########.fr       */
+/*   Updated: 2022/02/15 18:35:46 by vlugand-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ namespace ft
 		/*                     			  VARIABLE                                    */
 		/* ************************************************************************** */
 
-			pointer		_ptr;
+			iterator_type		_ptr;
 			// we want the pointer to be "protected" because we want to allow children classes to access it
 			// _ptr is also accessible between different instances of the same class
 
@@ -53,22 +53,42 @@ namespace ft
 		/* ************************************************************************** */
 
 			vector_reverse_iterator() : _ptr() {}
-			explicit vector_reverse_iterator(pointer ptr) : _ptr(ptr) {}
-			template <class Iter>
-			vector_reverse_iterator(const vector_reverse_iterator<Iter>& src) : _ptr(src._ptr) {}
+			vector_reverse_iterator(iterator_type ptr) : _ptr(ptr) {}
+			template <typename AnyIter>
+			vector_reverse_iterator(const vector_reverse_iterator<AnyIter>& src) : _ptr(src.base()) {}
 			~vector_reverse_iterator() {}
 
-			iterator_type base() const { return _ptr; }
+		/* ************************************************************************** */
+		/*                     		  BASE PTR GETTER                                 */
+		/* ************************************************************************** */
+
+			iterator_type		base() const { return _ptr; }
 
 		/* ************************************************************************** */
 		/*                     		OPERATORS OVERLOADS                               */
 		/* ************************************************************************** */
 
+		vector_reverse_iterator & operator=(vector_reverse_iterator const & rhs) {_ptr = rhs._ptr; return *this;}
+
+		// Implicit conversion to const: (https://en.cppreference.com/w/cpp/language/cast_operator)
+
+			operator vector_reverse_iterator<vector_iterator<value_type> >() { return vector_reverse_iterator<vector_iterator<value_type> >(_ptr); }
+			operator vector_reverse_iterator<vector_iterator<value_type const> >() const { return vector_reverse_iterator<vector_iterator<value_type const> >(_ptr); }
+
 		// Dereferencement operators:
 
-			reference operator*() const { return *_ptr; }
-			pointer operator->() { return _ptr; }	
-			value_type operator[](size_t i) { return *(_ptr + i); }
+			// reference operator*() const { return *_ptr; }
+			// pointer operator->() { return _ptr; }	
+			// value_type operator[](size_t i) { return *(_ptr + i); }
+
+			reference operator[](int index) {return *(_ptr - index - 1);}
+			pointer operator->() const {return &(operator*());}
+			reference operator*() const {
+				iterator_type it = _ptr;
+				it--;
+				return *it;
+	}
+
 
 		// Increment / decrement operators:
 
@@ -83,7 +103,7 @@ namespace ft
 				vector_reverse_iterator tmp;
 
 				tmp = *this;
-				--(*this);
+				--_ptr;
 				return (tmp); // value before incrementation is returned
 			}
 			
@@ -98,7 +118,7 @@ namespace ft
 				vector_reverse_iterator tmp;
 
 				tmp = *this;
-				++(*this);
+				++_ptr;
 				return (tmp); // value before decrementation is returned
 			}
 
@@ -112,45 +132,13 @@ namespace ft
 			// bool operator>(const vector_reverse_iterator & rhs) const { return (_ptr < rhs._ptr); }
 
 		// Arithmetics operators:  (a and b are objects of this iterator type, n is a value of its difference type)
-			vector_reverse_iterator<iterator_type> operator+(difference_type n) const { return (_ptr - n); } // [a + n]
-			vector_reverse_iterator<iterator_type> operator-(difference_type n) const { return (_ptr + n); } // [a - n]
-			difference_type operator-(const vector_reverse_iterator & rhs) const { return (_ptr + rhs._ptr); } // [a - b]
-
-			/* when (=) is involved we need to return a pointer to the current modified instance (allows chaining a = b = c) */
-			vector_reverse_iterator & operator=(vector_reverse_iterator const & rhs) // [a = b]
-			{
-				_ptr = rhs._ptr;
-				return (*this);
-			}
-
-			vector_reverse_iterator<iterator_type> & operator+=(difference_type n) // [a += n]
-			{ 
-				// If n == 0, this is a null operation
-				if (n < 0) // If n < 0, equivalent to executing --i n times. 
-				{
-					while (n < 0)
-					{
-						operator--();
-						n++;
-					}
-				}
-				else // If n > 0, equivalent to executing ++i n times.
-				{
-					while (n > 0)
-					{
-						operator++();
-						n--;
-					}
-				}
-				return (*this);
-			}
 			
-			vector_reverse_iterator<iterator_type> & operator-=(difference_type n) // [a -= n]
-			{
-				_ptr += (-n);
-				return (*this);
-			}
-
+			friend vector_reverse_iterator<Iterator> operator+(difference_type n, const vector_reverse_iterator& rhs) {return rhs._ptr - n;} //n + a
+			vector_reverse_iterator<Iterator> operator+(difference_type n) const {return _ptr - n;} //a + n
+			vector_reverse_iterator<Iterator> operator-(difference_type n) const {return _ptr + n;} //a - n
+			difference_type operator-(const vector_reverse_iterator& rhs) const {return rhs._ptr - _ptr;} //a - b
+			vector_reverse_iterator<Iterator> & operator+=(difference_type n) {_ptr -= n; return *this;}
+			vector_reverse_iterator<Iterator> & operator-=(difference_type n) {_ptr += n; return *this;}
 		// Redirection operator
 
 			/* here again we need the "friend" keyword because our class instance comes on the right hand side of the (<<) operator */
@@ -182,6 +170,7 @@ namespace ft
 	bool operator>( const ft::vector_reverse_iterator<Iter1>& lhs, const ft::vector_reverse_iterator<Iter2>& rhs ){ return (lhs.base() < rhs.base()); }
 	template< class Iter1, class Iter2 >
 	bool operator>=( const ft::vector_reverse_iterator<Iter1>& lhs, const ft::vector_reverse_iterator<Iter2>& rhs ){ return (lhs.base() <= rhs.base()); }
+
 }
 
 #endif
