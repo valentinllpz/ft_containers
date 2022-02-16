@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   test.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vlugand- <vlugand-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: valentin <valentin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/26 14:32:00 by vlugand-          #+#    #+#             */
-/*   Updated: 2022/02/15 18:43:34 by vlugand-         ###   ########.fr       */
+/*   Updated: 2022/02/16 12:41:59 by valentin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,25 +19,31 @@
 
 #define TESTED_NAMESPACE ft
 #define TESTED_TYPE int
+
 int main ()
 {
-	std::list<TESTED_TYPE> lst;
-	std::list<TESTED_TYPE>::iterator lst_it;
-	for (int i = 1; i < 5; ++i)
-		lst.push_back(i * 3);
+  ft::vector<int> myvector;
+  for (int i=1; i<5; i++) myvector.push_back(i);
 
-	TESTED_NAMESPACE::vector<TESTED_TYPE> vct(lst.begin(), lst.end());
-	// printSize(vct);
+  typedef ft::vector<int>::iterator iter_type;
+                                                         // ? 9 8 7 6 5 4 3 2 1 0 ?
+  iter_type from (myvector.begin());                     //   ^
+                                                         //         ------>
+  iter_type until (myvector.end());                      //                       ^
+                                                         //
+  ft::vector_reverse_iterator<iter_type> rev_until (from);     // ^
+                                                         //         <------
+  ft::vector_reverse_iterator<iter_type> rev_from (until);     //                     ^
 
-	lst_it = lst.begin();
-	for (int i = 1; lst_it != lst.end(); ++i)
-		*lst_it++ = i * 5;
-	vct.assign(lst.begin(), lst.end());
-	// printSize(vct);
+  std::cout << "myvector:";
+//   while (rev_from != rev_until)
+//   {
+//     std::cout << *rev_from << " " << *rev_until;
+//   	std::cout << '\n';
+// 	  *rev_from++;
+//   }
 
-	vct.insert(vct.end(), lst.rbegin(), lst.rend());
-	// printSize(vct);
-
+	std::cout << *rev_until << std::endl;
   return 0;
 }
 

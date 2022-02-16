@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   vector.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vlugand- <vlugand-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: valentin <valentin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 13:16:39 by vlugand-          #+#    #+#             */
-/*   Updated: 2022/02/15 19:20:50 by vlugand-         ###   ########.fr       */
+/*   Updated: 2022/02/16 13:26:36 by valentin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 #include "common.hpp"
 #include "vector_iterator.hpp"
-#include "vector_reverse_iterator.hpp"
+#include "reverse_iterator.hpp"
 
 namespace ft
 {
@@ -37,8 +37,8 @@ namespace ft
 			
 			typedef ft::vector_iterator<value_type>      	   	 	iterator;
 			typedef ft::vector_iterator<value_type const>			const_iterator;
-			typedef ft::vector_reverse_iterator<iterator>			reverse_iterator;
-			typedef ft::vector_reverse_iterator<const_iterator>		const_reverse_iterator;
+			typedef ft::reverse_iterator<iterator>					reverse_iterator;
+			typedef ft::reverse_iterator<const_iterator>			const_reverse_iterator;
 
 			typedef std::ptrdiff_t									difference_type;
 			typedef size_t											size_type;
@@ -125,16 +125,16 @@ namespace ft
 
 
 			iterator					begin() { return iterator(_array); }
-			const_iterator				begin() const {return const_iterator(_array); }
+			const_iterator				cbegin() const {return const_iterator(_array); }
 
 			iterator					end() { return iterator(_array + _size); }
-			const_iterator				end() const { return const_iterator(_array + _size); }
+			const_iterator				cend() const { return const_iterator(_array + _size); }
 
 			reverse_iterator 			rbegin() { return reverse_iterator(end()); }
-			const_reverse_iterator 		rbegin() const { return const_reverse_iterator(end()); }
+			const_reverse_iterator 		crbegin() const { return const_reverse_iterator(end()); }
 
 			reverse_iterator 			rend() { return reverse_iterator(begin()); }
-			const_reverse_iterator 		rend() const { return const_reverse_iterator(begin()); }
+			const_reverse_iterator 		crend() const { return const_reverse_iterator(begin()); }
 
 
 
