@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   vector_iterator.hpp                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vlugand- <vlugand-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: valentin <valentin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/26 12:45:04 by vlugand-          #+#    #+#             */
-/*   Updated: 2022/02/15 18:36:01 by vlugand-         ###   ########.fr       */
+/*   Updated: 2022/02/17 15:35:48 by valentin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,12 +109,12 @@ namespace ft
 
 		// Comparison operators:
 
-			bool operator==(const vector_iterator & rhs) const { return (_ptr == rhs._ptr); }
-			bool operator!=(const vector_iterator & rhs) const { return (_ptr != rhs._ptr); }
-			bool operator<=(const vector_iterator & rhs) const { return (_ptr <= rhs._ptr); }
-			bool operator>=(const vector_iterator & rhs) const { return (_ptr >= rhs._ptr); }
-			bool operator<(const vector_iterator & rhs) const { return (_ptr < rhs._ptr); }
-			bool operator>(const vector_iterator & rhs) const { return (_ptr > rhs._ptr); }
+			// bool operator==(const vector_iterator & rhs) const { return (_ptr == rhs._ptr); }
+			// bool operator!=(const vector_iterator & rhs) const { return (_ptr != rhs._ptr); }
+			// bool operator<=(const vector_iterator & rhs) const { return (_ptr <= rhs._ptr); }
+			// bool operator>=(const vector_iterator & rhs) const { return (_ptr >= rhs._ptr); }
+			// bool operator<(const vector_iterator & rhs) const { return (_ptr < rhs._ptr); }
+			// bool operator>(const vector_iterator & rhs) const { return (_ptr > rhs._ptr); }
 
 		// Arithmetics operators:  (a and b are objects of this iterator type, n is a value of its difference type)
 

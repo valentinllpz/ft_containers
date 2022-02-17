@@ -6,7 +6,7 @@
 /*   By: valentin <valentin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 13:16:39 by vlugand-          #+#    #+#             */
-/*   Updated: 2022/02/16 13:26:36 by valentin         ###   ########.fr       */
+/*   Updated: 2022/02/17 15:22:59 by valentin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,16 +125,16 @@ namespace ft
 
 
 			iterator					begin() { return iterator(_array); }
-			const_iterator				cbegin() const {return const_iterator(_array); }
+			const_iterator				begin() const {return const_iterator(_array); }
 
 			iterator					end() { return iterator(_array + _size); }
-			const_iterator				cend() const { return const_iterator(_array + _size); }
+			const_iterator				end() const { return const_iterator(_array + _size); }
 
 			reverse_iterator 			rbegin() { return reverse_iterator(end()); }
-			const_reverse_iterator 		crbegin() const { return const_reverse_iterator(end()); }
+			const_reverse_iterator 		rbegin() const { return const_reverse_iterator(end()); }
 
 			reverse_iterator 			rend() { return reverse_iterator(begin()); }
-			const_reverse_iterator 		crend() const { return const_reverse_iterator(begin()); }
+			const_reverse_iterator 		rend() const { return const_reverse_iterator(begin()); }
 
 
 
@@ -398,11 +398,11 @@ namespace ft
 			/*                     		       VARIABLES                                  */
 			/* ************************************************************************** */
 
-			pointer					_array;
-			allocator_type			_alloc;
-			size_type				_size;
-			size_type				_capacity;
-			const size_type			_max_size;
+				pointer					_array;
+				allocator_type			_alloc;
+				size_type				_size;
+				size_type				_capacity;
+				const size_type			_max_size;
 	};
 
 		/* ************************************************************************** */
