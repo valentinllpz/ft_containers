@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   stack.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: valentin <valentin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: vlugand- <vlugand-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/17 14:10:43 by valentin          #+#    #+#             */
-/*   Updated: 2022/02/17 15:28:30 by valentin         ###   ########.fr       */
+/*   Updated: 2022/02/21 16:44:56 by vlugand-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ namespace ft
 		/*                       NON MEMBER FUNCTIONS OVERLOADS                       */
 		/* ************************************************************************** */	
 
-			// relational operators
+			// relational operators (here we have to use friend because our _container variable is protected)
 			friend bool operator==( const stack<T,Container>& lhs, const stack<T,Container>& rhs ){ return (lhs._container == rhs._container); }
 			friend bool operator!=( const stack<T,Container>& lhs, const stack<T,Container>& rhs ){ return (lhs._container != rhs._container); }
 			friend bool operator<( const stack<T,Container>& lhs, const stack<T,Container>& rhs ){ return (lhs._container < rhs._container); }
