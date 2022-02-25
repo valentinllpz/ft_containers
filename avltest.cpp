@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   test.cpp                                           :+:      :+:    :+:   */
+/*   avltest.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: vlugand- <vlugand-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/26 14:32:00 by vlugand-          #+#    #+#             */
-/*   Updated: 2022/02/24 18:46:04 by vlugand-         ###   ########.fr       */
+/*   Updated: 2022/02/25 15:04:25 by vlugand-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include <vector>
 #include <stdexcept>
 #include "vector.hpp"
-#include <map>
+#include <list>
 #include "AVL.hpp"
 
 #define TESTED_NAMESPACE ft
@@ -23,14 +23,15 @@
 
 int main ()
 {
-	std::map<std::string, int> mymap;
+	AVLTree<int> tree;
 	
-	mymap.insert(std::pair<std::string, int>("jeej", 1));
-	mymap.insert(std::pair<std::string, int>("fuuf", 2));
-	mymap.insert(std::pair<std::string, int>("mdr", 3));
 
-	std::cout << "mymap contains:\n";
-  	for (std::map<std::string, int>::iterator it=mymap.begin(); it!=mymap.end(); ++it)
-    	std::cout << it->first << " => " << it->second << '\n';
+	for (int i = 1; i < 15; i++)
+		tree.add(i);
+
+	tree.print(tree.getRoot(), 5);
+
 	return 0;
 }
+
+

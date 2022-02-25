@@ -6,7 +6,7 @@
 /*   By: vlugand- <vlugand-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 12:32:16 by vlugand-          #+#    #+#             */
-/*   Updated: 2022/02/14 16:45:49 by vlugand-         ###   ########.fr       */
+/*   Updated: 2022/02/24 19:14:32 by vlugand-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,7 @@ namespace ft
 	// https://www.cplusplus.com/reference/algorithm/lexicographical_compare/
 
 	template <class InputIterator1, class InputIterator2>
-	bool lexicographical_compare (InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, InputIterator2 last2)
+	bool	lexicographical_compare(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, InputIterator2 last2)
 	{
 		while (first1!=last1)
 		{
@@ -119,7 +119,7 @@ namespace ft
 	// https://cplusplus.com/reference/algorithm/equal/
 
 	template <class InputIterator1, class InputIterator2>
- 	bool equal(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2)
+ 	bool	equal(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2)
 	{
 		while (first1!=last1)
 		{
@@ -130,22 +130,22 @@ namespace ft
 		return true;
 	}
 
-	// https://www.cplusplus.com/reference/functional/binary_function/
+	// // https://www.cplusplus.com/reference/functional/binary_function/
 
-	template <class Arg1, class Arg2, class Result>
-  	struct binary_function
-	{
-		typedef Arg1 first_argument_type;
-		typedef Arg2 second_argument_type;
-		typedef Result result_type;
-  	};
+	// template <class Arg1, class Arg2, class Result>
+  	// struct	binary_function
+	// {
+	// 	typedef Arg1 first_argument_type;
+	// 	typedef Arg2 second_argument_type;
+	// 	typedef Result result_type;
+  	// };
 
-	// https://www.cplusplus.com/reference/functional/less/
+	// // https://www.cplusplus.com/reference/functional/less/
 
-	template <class T> struct less : binary_function <T, T, bool>
-	{
-		bool operator() (const T& x, const T& y) const { return x < y; }
-	};
+	// template <class T> struct less : binary_function <T, T, bool>
+	// {
+	// 	bool operator() (const T& x, const T& y) const { return x < y; }
+	// };
 }
 
 #endif

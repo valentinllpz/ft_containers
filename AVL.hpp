@@ -6,176 +6,309 @@
 /*   By: vlugand- <vlugand-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 14:59:27 by vlugand-          #+#    #+#             */
-/*   Updated: 2022/02/23 18:01:27 by vlugand-         ###   ########.fr       */
+/*   Updated: 2022/02/25 15:26:07 by vlugand-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#ifndef AVL_HPP
+# define AVL_HPP
 
 #include "common.hpp"
 
 template <class T>
 class Node
 {
-	public:
+	public :
 
 		T 		value;
-  		Node	*left;
-		Node	*right;
+		Node	*parent;
+		Node	*l_child;
+		Node	*r_child;
 
- 		Node() : value(0), left(NULL), right(NULL) {}
-		Node(T & v) : value(v), left(NULL), right(NULL) {}
+		Node() : value(0), parent(NULL), l_child(NULL), r_child(NULL) {}
+		Node(const T & v) : value(v), parent(NULL), l_child(NULL), r_child(NULL) {}
+		Node(const T & v, Node<T> *n) : value(v), parent(n), l_child(NULL), r_child(NULL) {}
 };
+
 
 template <class T>
 class AVLTree
 {
-	public:
+	private :
 
-		Node<T>	*root;
-	
-		AVLTree() : root(NULL) {}
+		Node<T>		*root;		// root de l'arbre.
+		int			nodeNb;		// Nombre de noeuds de l'arbre.
 
-		bool	isEmpty() { return (root == NULL ? true : false); }
+		/* ************************************************************************** */
+		/*                       PRIVATE MEMBER FUNCTIONS                             */
+		/* ************************************************************************** */
 
-		int		height(Node<T> *n)  // Get the tree's height from Node *n recursively
+		Node<T>		*minimum(Node<T> *n) const
+		{
+			if (n->l_child)
+				return (minimum(n->l_child));
+			return (n);
+		}
+
+		Node<T>		*maximum(Node<T> *n) const
+		{
+			if (n->r_child)
+				return (maximum(n->r_child));
+			return (n);
+		}
+
+		Node<T>		*findValue(const T & v) const
+		{
+			Node<T>	*n = root;
+
+			while (n && n->value != v)
+			{
+				if (v < n->value)
+					n = n->l_child;
+				else
+					n = n->r_child;
+			}
+			return (n);
+		}
+
+		Node<T>		*findParent(const T & v) const
+		{
+			if (nodeNb == 0)
+				return NULL;
+			Node<T>	*parent = root;
+			int parent_trouve = 0;
+			do
+			{
+				if (v < parent->value && parent->l_child != NULL)
+					parent = parent->l_child;
+				else if (parent->value < v && parent->r_child != NULL)
+					parent = parent->r_child;
+				else
+					parent_trouve = 1;
+			} while (!parent_trouve);
+			return parent;
+		}
+
+		void eraseFrom(Node<T> *node)
+		{
+			if (node != NULL)
+			{
+				eraseFrom(node->l_child);
+				eraseFrom(node->r_child);
+				delete node;
+			}
+		}
+
+		int		depth(Node<T> *n) const
 		{
 			if (n == NULL)
-				return (-1);
-			int	lh = height(n->left);
-			int	rh = height(n->right);
+				return (0);
+			int	lh = depth(n->l_child);
+			int	rh = depth(n->r_child);
 			return (lh > rh ? lh + 1 : rh + 1);
 		}
 
-		int		balance(Node<T> *n) // Get the balance factor of Node *n
+		void balanceTree(Node<T> *tree)
 		{
-			if (n == NULL)
-				return (-1);
-			return (height(n->left) - height(n->right));
-		}
-
-		Node<T>	*rightRotate(Node<T> *y)
-		{
-			Node<T> *x = y->left;
-			Node<T> *subtree = x->right;
-			x->right = y;
-			y->left = subtree;
-			return (x);
-		}
-
-		Node<T>	*leftRotate(Node<T> *x)
-		{
-			Node<T> *y = x->right;
-			Node<T> *subtree = y->left;
-			y->left = x;
-			x->right = subtree;
-			return (y);
+			if (tree == NULL)
+				return;
+			int bf = depth(tree->r_child) - depth(tree->l_child);
+			if (bf == 2) // if the tree is left heavy.
+			{
+				int balance_r_child = depth(tree->r_child->r_child) - depth(tree->r_child->l_child);
+				if (balance_r_child == -1)	// RL rotation required
+					rightRotate(tree->r_child);
+				leftRotate(tree);
+			}
+			else if (bf == -2)	// Debalancement vers la gauche.
+			{
+				int balance_l_child = depth(tree->l_child->r_child) - depth(tree->l_child->l_child);
+				if (balance_l_child == 1)		// Cas de rotation gauche-droite.
+					leftRotate(tree->l_child);
+				rightRotate(tree);
+			}
+			balanceTree(tree->parent);
 		}
 		
-		Node<T>	*insert(Node<T> *n, Node<T> *new_node)
+		void leftRotate(Node<T> *tree)
 		{
-			if (n == NULL)
+			if (tree == NULL)
+				return;
+			Node<T> * r_child = tree->r_child; // On attache le parent de tree au fils droit de tree.
+			if (tree->parent != NULL)
 			{
-				n = new_node;
-				std::cout << "Value inserted successfully: " << n->value << " | root = " << root->value << std::endl;
-				return (n);
+				if (tree->parent->r_child == tree)
+					tree->parent->r_child = r_child;
+				else
+					tree->parent->l_child = r_child;
 			}
-			if (new_node->value < n->value)
-				n->left = insert(n->left, new_node);
-			else if (new_node->value > n->value)
-				n->right = insert(n->right, new_node);
-			else // no duplicate allowed
-				return (n);
-			int	bf = balance(n);
-			if (bf > 1 && new_node->value < n->left->value)  // if the tree is left heavy and our new_node->value was added after n->left
-				return (rightRotate(n));
-			if (bf < -1 && new_node->value > n->right->value) // if the tree is right heavy and our new->node value was added after n->right
-				return (leftRotate(n));
-			if (bf > 1 && new_node->value > n->left->value) // if the tree is left heavy and our new_node->value was added to n->right
-			{
-				n->left = leftRotate(n);
-				return (rightRotate(n));
-			}
-			if (bf < -1 && new_node->value < n->right->value) // if the tree is right heavy and our new_node->value was added to n->left
-			{
-				n->right = rightRotate(n);
-				return (leftRotate(n));
-			}
-			return (n);
+			r_child->parent = tree->parent; // On lie tree et le sous tree gauche du fils droit.
+			if (r_child->l_child != NULL)
+				r_child->l_child->parent = tree;
+			tree->r_child = r_child->l_child; // On place le fils droit comme sommet de tree.
+			tree->parent = r_child;
+			r_child->l_child = tree;
+			if (tree == root)
+				root = r_child;
 		}
 
-		Node<T>	*searchNode(Node<T> *n, T value) // call with n = root the first time to search all the tree
+		void rightRotate(Node<T> *tree)
 		{
-			if (n == NULL)
-				return (NULL);
-			if (value < n->value)
-				return (searchNode(n->left, value));
-			else if (value > n->value)
-				return (searchNode(n->right, value));
-			else // value == n->value
-				return (n);
-		}
-
-		Node<T>	*deleteNode(Node<T> *n, T value)
-		{
-			if (n == NULL)
-				return (NULL);
-			if (value < n->value)
-				n->left = deleteNode(n->left, value);
-			else if (value > n->value)
-				n->right = deleteNode(n->right, value);
-			else
+			if (tree == NULL) // Si l'arbre est vide, on ne fait rien.
+				return;
+			Node<T> * l_child = tree->l_child; // On attache le parent de tree au fils gauche de tree.
+			if (tree->parent != NULL)
 			{
-				if (n->left == NULL) // node with only one child or no child
-				{
-					Node<T> *tmp = n->right;
-					delete n;
-					return (tmp);
-				}
-				else if (n->right == NULL) // node with only one child or no child
-				{
-					Node<T> *tmp = n->left;
-					delete n;
-					return (tmp);
-				}
-				else // node with 2 children
-				{
-					Node<T> *tmp = n->right; // Here we are going down to the smallest value of the n right descendants (= smallest value bigger than n->value)
-					while (tmp->left)
-						tmp = tmp->left;
-					n->value = tmp->value; // we replace the value in node n
-					n->right = deleteNode(n->right, n->value); // from the right child of n, we now delete the duplicate value
-				}
-
-				int bf = getBalanceFactor(n);
-				if (bf == 2 && getBalanceFactor(n->left) >= 0) // Left Left Imbalance
-					return rightRotate(n);
-				else if (bf == 2 && getBalanceFactor(n->left) == -1) // Left Right Imbalance
-				{
-					n->left = leftRotate(n->left);
-					return rightRotate(n);
-				}
-				else if (bf == -2 && getBalanceFactor(n->right) <= 0) // Right Right Imbalance	
-					return leftRotate(n);
-				else if (bf == -2 && getBalanceFactor(n->right) == 1) // Right Left Imbalance
-				{
-					n->right = rightRotate(n->right);
-					return leftRotate(n);
-    			}
+				if (tree->parent->l_child == tree)
+					tree->parent->l_child = l_child;
+				else
+					tree->parent->r_child = l_child;
 			}
-			return (n);
+			l_child->parent = tree->parent; // On lie tree et le sous tree droit du fils gauche.
+			if (l_child->r_child != NULL)
+				l_child->r_child->parent = tree;
+			tree->l_child = l_child->r_child; // On place le fils droit comme sommet de tree.
+			tree->parent = l_child;
+			l_child->r_child = tree;
+			if (tree == root)
+				root = l_child;
 		}
 
-		// DEBUG
-		void	print(Node<T> * r, int space)
-		{
-			if (r == NULL)
-				return ;
-			space += 5; 
-			print(r -> right, space);
-			std::cout << std::endl;
-			for (int i = 5; i < space; i++)
-				std::cout << " ";
-			std::cout << r -> value << "\n"; 
-			print(r -> left, space); 
-		}
 		
+		// Retourne l'adresse du parent d'un v que l'on ajoutera.
+		// Retourne l'adresse du parent HYPOTHETIQUE d'un v A AJOUTER
+		// (non present dans l'arbre). Si l'arbre est vide, on retourne NULL.
+
+ public :
+	// CONSTRUCTEUR
+	AVLTree() : root(NULL), nodeNb(0) {}
+
+	// DESTRUCTEUR
+	~AVLTree() {}
+
+	// METHODES DE MODIFICATION
+	// Permettent d'ajouter et de retirer un v dans l'arbre.
+	bool	isEmpty() { return (root == NULL ? true : false); }
+//	size_type size() const;
+
+	Node<T>		*getRoot() { return (root); }
+
+	int add(const T);
+	int remove(const T &);
+	void clear()
+	{
+		if (nodeNb > 0)
+		{
+			eraseFrom(root->l_child);
+			eraseFrom(root->r_child);
+			delete root;
+			nodeNb = 0;
+		}
+	}
+
+
+	// DEBUG
+	void	print(Node<T> * r, int space)
+	{
+		if (r == NULL)
+			return ;
+		space += 5; 
+		print(r->r_child, space);
+		std::cout << std::endl;
+		for (int i = 5; i < space; i++)
+			std::cout << " ";
+		std::cout << r->value << "\n"; 
+		print(r->l_child, space); 
+	}
 };
+
+
+
+
+
+//-----------------------------------------------------------------------
+// 					METHODES PUBLIQUES DE AVLTree
+//-----------------------------------------------------------------------
+template <class T>
+int AVLTree<T>::add(const T v)
+{
+// Si la valeur est deja la, on ne l'ajoute pas une seconde fois.
+	if (findValue(v))
+		return 0;
+
+	// On trouve le parent, on cree le noeud et on verifie la memoire.
+	Node<T> * parent = findParent(v);
+	Node<T> * nouveau = new Node<T>(v, parent);
+	if (nouveau == NULL)
+		return 0;
+
+	// On attache le parent et le fils.
+	if (parent == NULL)
+		root = nouveau;
+	else if (v < parent->value)
+		parent->l_child = nouveau;
+	else
+		parent->r_child = nouveau;
+	++nodeNb;
+
+	// On garde l'arbre equilibre en balacant a partir du nouveau.
+	balanceTree(findValue(v));
+	return 1;
+}
+
+
+template <class T>
+int AVLTree<T>::remove(const T & v)
+{
+	// On conserve l'adresse du parent.
+	Node<T> * parent = findValue(v);
+	parent = parent->parent;
+
+	// On retire l'v.
+// On trouve l'v.
+	Node<T> * noeud = findValue(v);
+	if (noeud == NULL)
+		return 0;
+
+	// On trouve le plus grand des plus petits.
+	Node<T> * remplacant = maximum(noeud->l_child);
+
+	// S'il n'y a pas de remplacant, on escamote le noeud.
+	if (remplacant == NULL)
+	{
+		if (noeud == root)
+			root = noeud->r_child;
+		else if (noeud->parent->l_child == noeud)
+			noeud->parent->l_child = noeud->r_child;
+		else
+			noeud->parent->r_child = noeud->r_child;
+		if (noeud->r_child != NULL)
+			noeud->r_child->parent = noeud->parent;
+	}
+	else	// J'ai un maximum des minima.
+	{
+		noeud->value = remplacant->value;
+		if (remplacant->parent->l_child == remplacant)
+			remplacant->parent->l_child = remplacant->l_child;
+		else
+			remplacant->parent->r_child = remplacant->l_child;
+		if (remplacant->l_child != NULL)
+			remplacant->l_child->parent = remplacant->parent;
+		noeud = remplacant;
+	}
+	delete noeud;
+	--nodeNb;
+
+	// On rebalance l'arbre a partir du parent.
+	balanceTree(parent);
+	return 1;
+}
+//-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
+//						FIN DE LA CLASSE AVLTree
+//-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
+
+
+#endif
+
