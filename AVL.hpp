@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   AVL.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: valentin <valentin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: vlugand- <vlugand-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 14:59:27 by vlugand-          #+#    #+#             */
-/*   Updated: 2022/02/25 17:42:56 by valentin         ###   ########.fr       */
+/*   Updated: 2022/03/01 15:34:05 by vlugand-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,25 +69,6 @@ class AVLTree
 					n = n->r_child;
 			}
 			return (n);
-		}
-
-		Node<T>		*findParent(const T & v) const
-		{
-			if (nodeNb == 0)
-				return (NULL);
-			Node<T>	*parent = root;
-			while (1)
-			{
-				std::cout << "LOOP\n";
-				if (v < parent->value && parent->l_child)
-					parent = parent->l_child;
-				else if (parent->value < v && parent->r_child)
-					parent = parent->r_child;
-				else
-					break ;
-			}
-			std::cout << parent->value << " is the parent of " << v << std::endl;
-			return (parent);
 		}
 
 		void eraseFrom(Node<T> *node)
@@ -194,7 +175,33 @@ class AVLTree
 
 	Node<T>		*getRoot() { return (root); }
 
-	int add(const T);
+	Node<T>		*add(const T)
+	{
+		if (findValue(v))
+			return (NULL); 			// If value already exists we cannot add it
+		Node<T> *parent = root;
+		while (1)					// We need first to find which node will become parent of new value v
+		{
+			if (v < parent->value && parent->l_child)
+				parent = parent->l_child;
+			else if (parent->value < v && parent->r_child)
+				parent = parent->r_child;
+			else
+				break ;
+		}
+		Node<T> *n = new Node<T>(v, parent);
+		if (n == NULL)
+			return (NULL);
+		if (parent == NULL)			// Now linking new node to parent 
+			root = n;
+		else if (v < parent->value)
+			parent->l_child = n;
+		else
+			parent->r_child = n;
+		++nodeNb;
+		balanceTree(findValue(v));
+		return (n);
+	}
 	int remove(const T &);
 	void clear()
 	{
@@ -237,8 +244,17 @@ int AVLTree<T>::add(const T v)
 	if (findValue(v))
 		return 0;
 
-	// On trouve le parent, on cree le noeud et on verifie la memoire.
-	Node<T> * parent = findParent(v);
+	// We need first to find which node will become parent of new value v
+	Node<T> * parent = root;
+	while (1)
+	{
+		if (v < parent->value && parent->l_child)
+			parent = parent->l_child;
+		else if (parent->value < v && parent->r_child)
+			parent = parent->r_child;
+		else
+			break ;
+	}
 	Node<T> * nouveau = new Node<T>(v, parent);
 	if (nouveau == NULL)
 		return 0;

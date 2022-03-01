@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   avltest.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: valentin <valentin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: vlugand- <vlugand-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/26 14:32:00 by vlugand-          #+#    #+#             */
-/*   Updated: 2022/02/25 17:28:14 by valentin         ###   ########.fr       */
+/*   Updated: 2022/03/01 15:24:43 by vlugand-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,8 @@ int main ()
 		tree.add(i);
 
 	tree.print(tree.getRoot(), 5);
-	Node<int> *n = tree.findParent(6);
-	std::cout << "\n parent is " << n->value;
+	// Node<int> *n = tree.findParent(66);
+	// std::cout << "\n parent is " << n->value;
 	return 0;
 }
 
