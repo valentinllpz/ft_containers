@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   AVL.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vlugand- <vlugand-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: valentin <valentin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 14:59:27 by vlugand-          #+#    #+#             */
-/*   Updated: 2022/02/25 15:26:07 by vlugand-         ###   ########.fr       */
+/*   Updated: 2022/02/25 17:42:56 by valentin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ class Node
 template <class T>
 class AVLTree
 {
-	private :
+	public :
 
 		Node<T>		*root;		// root de l'arbre.
 		int			nodeNb;		// Nombre de noeuds de l'arbre.
@@ -74,19 +74,20 @@ class AVLTree
 		Node<T>		*findParent(const T & v) const
 		{
 			if (nodeNb == 0)
-				return NULL;
+				return (NULL);
 			Node<T>	*parent = root;
-			int parent_trouve = 0;
-			do
+			while (1)
 			{
-				if (v < parent->value && parent->l_child != NULL)
+				std::cout << "LOOP\n";
+				if (v < parent->value && parent->l_child)
 					parent = parent->l_child;
-				else if (parent->value < v && parent->r_child != NULL)
+				else if (parent->value < v && parent->r_child)
 					parent = parent->r_child;
 				else
-					parent_trouve = 1;
-			} while (!parent_trouve);
-			return parent;
+					break ;
+			}
+			std::cout << parent->value << " is the parent of " << v << std::endl;
+			return (parent);
 		}
 
 		void eraseFrom(Node<T> *node)
