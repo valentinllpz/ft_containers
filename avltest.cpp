@@ -6,7 +6,7 @@
 /*   By: vlugand- <vlugand-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/26 14:32:00 by vlugand-          #+#    #+#             */
-/*   Updated: 2022/03/01 15:24:43 by vlugand-         ###   ########.fr       */
+/*   Updated: 2022/03/01 19:33:19 by vlugand-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int main ()
 	AVLTree<int> tree;
 	
 
-	for (int i = 1; i < 15; i++)
+	for (int i = 1; i < 50; i++)
 		tree.add(i);
 
 	tree.print(tree.getRoot(), 5);

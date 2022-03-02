@@ -6,12 +6,14 @@
 /*   By: vlugand- <vlugand-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 12:32:16 by vlugand-          #+#    #+#             */
-/*   Updated: 2022/02/24 19:14:32 by vlugand-         ###   ########.fr       */
+/*   Updated: 2022/03/02 18:29:55 by vlugand-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef UTILS_HPP
 # define UTILS_HPP
+
+#include "common.hpp"
 
 namespace ft
 {
@@ -107,9 +109,9 @@ namespace ft
 		while (first1!=last1)
 		{
 			if (first2==last2 || *first2<*first1)
-				return false;
+				return (false);
 			else if (*first1<*first2)
-				return true; // Returns true if the range [first1,last1) compares lexicographically less than the range [first2,last2).
+				return (true); // Returns true if the range [first1,last1) compares lexicographically less than the range [first2,last2).
 			++first1; ++first2;
 		}
 		return (first2!=last2);
@@ -124,10 +126,18 @@ namespace ft
 		while (first1!=last1)
 		{
 			if (!(*first1 == *first2))
-				return false;
+				return (false);
 			++first1; ++first2;
 		}
-		return true;
+		return (true);
+	}
+
+	// https://www.cplusplus.com/reference/utility/make_pair/
+
+	template <class T1,class T2>
+	ft::pair<T1,T2> make_pair (T1 x, T2 y)
+	{
+		return ( ft::pair<T1,T2>(x,y) );
 	}
 
 	// // https://www.cplusplus.com/reference/functional/binary_function/
@@ -140,7 +150,7 @@ namespace ft
 	// 	typedef Result result_type;
   	// };
 
-	// // https://www.cplusplus.com/reference/functional/less/
+	// https://www.cplusplus.com/reference/functional/less/
 
 	// template <class T> struct less : binary_function <T, T, bool>
 	// {

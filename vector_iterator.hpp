@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   vector_iterator.hpp                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: valentin <valentin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: vlugand- <vlugand-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/26 12:45:04 by vlugand-          #+#    #+#             */
-/*   Updated: 2022/02/17 15:35:48 by valentin         ###   ########.fr       */
+/*   Updated: 2022/03/01 18:59:47 by vlugand-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,13 +20,13 @@
 
 namespace ft
 {
-	template <typename T>
+	template < typename T >
 	class vector_iterator
 	{
 		public:
 
 		/* ************************************************************************** */
-		/*                     			   ALIASES                                    */
+		/*                     		    MEMBER TYPES                                  */
 		/* ************************************************************************** */
 			
 			typedef std::ptrdiff_t						difference_type;
@@ -51,7 +51,7 @@ namespace ft
 		/*                     			CONSTRUCTORS                                  */
 		/* ************************************************************************** */
 
-			vector_iterator() : _ptr() {}
+			vector_iterator() : _ptr(NULL) {}
 			vector_iterator(pointer ptr) : _ptr(ptr) {}
 			vector_iterator(const vector_iterator & src) : _ptr(src._ptr) {}
 			~vector_iterator() {}
@@ -67,12 +67,12 @@ namespace ft
 		/* ************************************************************************** */
 
 		// Implicit conversion to const: (https://en.cppreference.com/w/cpp/language/cast_operator)
-		operator vector_iterator<value_type const>() const { return vector_iterator<value_type const>(_ptr); }
+			operator vector_iterator<value_type const>() const { return vector_iterator<value_type const>(_ptr); }
 
 		// Dereferencement operators:
 
 			reference operator*() const { return *_ptr; }
-			pointer operator->() { return _ptr; }	
+			pointer operator->() const { return _ptr; }	
 			reference operator[](size_t i) { return *(_ptr + i); }
 
 		// Increment / decrement operators:
