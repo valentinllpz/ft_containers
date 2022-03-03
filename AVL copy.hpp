@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   AVL.hpp                                            :+:      :+:    :+:   */
+/*   AVL copy.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: vlugand- <vlugand-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 14:59:27 by vlugand-          #+#    #+#             */
-/*   Updated: 2022/03/03 21:45:07 by vlugand-         ###   ########.fr       */
+/*   Updated: 2022/03/03 19:29:27 by vlugand-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,6 @@ namespace ft
 			Node() : value(0), parent(NULL), l_child(NULL), r_child(NULL) {}
 			Node(const T & v) : value(v), parent(NULL), l_child(NULL), r_child(NULL) {}
 			Node(const T & v, Node<T> *n) : value(v), parent(n), l_child(NULL), r_child(NULL) {}
-			~Node() {}
 	};
 
 
@@ -40,8 +39,7 @@ namespace ft
 		private :
 
 			Node<T>		*_root;
-			size_t		_nodeNb;
-
+			size_t		_size;
 
 			/* ************************************************************************** */
 			/*                       PRIVATE MEMBER FUNCTIONS                             */
@@ -150,14 +148,14 @@ namespace ft
 
 	public :
 
-		AVLTree() : _root(NULL), _nodeNb(0) {}
+		AVLTree() : _root(NULL), _size(0) {}
 		~AVLTree() {}
 
 		bool		isEmpty() { return (_root == NULL ? true : false); }
 		
-		size_t		get_NodeNb() const {return (_nodeNb); };
+		size_t		get_size() const {return (_size); };
 
-		Node<T>		*get_Root() { return (_root); }
+		Node<T>		*get_root() { return (_root); }
 
 		Node<T>		*findValue(const T & v) const
 			{
@@ -191,7 +189,10 @@ namespace ft
 						break ;
 				}
 			}
-			Node<T> *n = new Node<T>(v, parent);
+			Node<T> *n = 
+			
+			new Node<T>(v, parent);
+
 			if (n == NULL)
 				return (0);
 			if (parent == NULL)			// Now linking new node to parent 
@@ -200,7 +201,7 @@ namespace ft
 				parent->l_child = n;
 			else
 				parent->r_child = n;
-			++_nodeNb;
+			++_size;
 			balanceTree(findValue(v));
 			return (1);
 		}
@@ -235,19 +236,19 @@ namespace ft
 				n = substitute;
 			}
 			delete n;
-			--_nodeNb;
+			--_size;
 			balanceTree(parent);
 			return 1;
 		}
 
 		void		clear()
 		{
-			if (_nodeNb > 0)
+			if (_size > 0)
 			{
 				eraseFrom(_root->l_child);
 				eraseFrom(_root->r_child);
 				delete _root;
-				_nodeNb = 0;
+				_size = 0;
 			}
 		}
 

@@ -6,7 +6,7 @@
 /*   By: vlugand- <vlugand-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 13:16:39 by vlugand-          #+#    #+#             */
-/*   Updated: 2022/03/01 17:51:51 by vlugand-         ###   ########.fr       */
+/*   Updated: 2022/03/03 20:16:24 by vlugand-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,15 +142,9 @@ namespace ft
 			/*                     			   CAPACITY                                   */
 			/* ************************************************************************** */
 
-			size_type	size() const
-			{
-				return (_size);
-			}
+			size_type	size() const { return (_size); }
 
-			size_type	max_size() const
-			{
-				return (_max_size);
-			}
+			size_type	max_size() const { return (_max_size); }
 
 			void		resize(size_type n, value_type val = value_type())
 			{
@@ -161,15 +155,9 @@ namespace ft
 				return ;
 			}
 
-			size_type	capacity() const
-			{
-				return (_capacity);
-			}
+			size_type	capacity() const { return (_capacity); }
 
-			bool		empty() const
-			{
-				return _size == 0 ? true : false;
-			}
+			bool		empty() const {	return (_size == 0 ? true : false)); }
 
 			void		reserve(size_type n)
 			{
@@ -194,15 +182,9 @@ namespace ft
 			/*                     		    ELEMENT ACCESS                                */
 			/* ************************************************************************** */
 
-			reference operator[](size_type n)
-			{
-				return (_array[n]);
-			}
+			reference operator[](size_type n) {	return (_array[n]);	}
 
-			const_reference operator[](size_type n) const
-			{
-				return (_array[n]);
-			}
+			const_reference operator[](size_type n) const {	return (_array[n]);	}
 
 			reference at(size_type n)
 			{
@@ -218,25 +200,13 @@ namespace ft
 				return (_array[n]);
 			}
 
-			reference front()
-			{
-				return (_array[0]);
-			}
+			reference front() { return (_array[0]); }
 
-			const_reference front() const
-			{
-				return (_array[0]);
-			}
+			const_reference front() const {	return (_array[0]);	}
 
-			reference back()
-			{
-				return (_array[_size - 1]);
-			}
+			reference back() { return (_array[_size - 1]); }
 
-			const_reference back() const
-			{
-				return (_array[_size - 1]);
-			}
+			const_reference back() const { return (_array[_size - 1]); }
 
 
 			/* ************************************************************************** */
