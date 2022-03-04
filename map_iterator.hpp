@@ -6,7 +6,7 @@
 /*   By: vlugand- <vlugand-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/01 17:42:12 by vlugand-          #+#    #+#             */
-/*   Updated: 2022/03/02 18:38:12 by vlugand-         ###   ########.fr       */
+/*   Updated: 2022/03/04 15:22:00 by vlugand-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,10 +84,10 @@ namespace ft
 				}
 				else
 				{
-					while (_node->_parent && _node->_parent->_left != _node) // while our current node is not the left child of its parent (= while it's not smaller than its parent)
-						_node = _node->_parent;
-					if (_node->_parent) // if we are not in the case _root->_parent
-						_node = _node->_parent;
+					while (_node->parent && _node->parent->_left != _node) // while our current node is not the left child of its parent (= while it's not smaller than its parent)
+						_node = _node->parent;
+					if (_node->parent) // if we are not in the case _root->_parent
+						_node = _node->parent;
 				}
 				return (*this); // incremented value is returned (hence the use of reference in prototype)
 			}
@@ -111,10 +111,10 @@ namespace ft
 				}
 				else
 				{
-					while (_node->_parent && _node->_parent->_right != _node) // while our current node is not the right child of its parent (= while it's not bigger than its parent)
-						_node = _node->_parent;
-					if (_node->_parent) // if we are not in the case _root->_parent
-						_node = _node->_parent;
+					while (_node->parent && _node->parent->_right != _node) // while our current node is not the right child of its parent (= while it's not bigger than its parent)
+						_node = _node->parent;
+					if (_node->parent) // if we are not in the case _root->_parent
+						_node = _node->parent;
 				}
 				return (*this); // incremented value is returned (hence the use of reference in prototype)
 			}

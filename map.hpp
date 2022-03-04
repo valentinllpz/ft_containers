@@ -6,7 +6,7 @@
 /*   By: vlugand- <vlugand-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/21 19:06:34 by vlugand-          #+#    #+#             */
-/*   Updated: 2022/03/04 14:21:22 by vlugand-         ###   ########.fr       */
+/*   Updated: 2022/03/04 15:22:18 by vlugand-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ namespace ft
       		typedef ft::Node<value_type>*					node_pointer;
 			typedef Compare									key_compare;
 			
-			class	value_compare //: public ft::binary_function<value_type, value_type, bool >
+			class	value_compare //: public std::binary_function<value_type, value_type, bool >
 			{ 
 				friend class	map;
 
@@ -105,12 +105,12 @@ namespace ft
 				return iterator(minimum(_root));				
 			}
 
-			const_iterator		begin() const
-			{
-				if (_size == 0)
-					return (_root);
-				return const_iterator(minimum(_root));
-			}
+			// const_iterator		begin() const
+			// {
+			// 	if (_size == 0)
+			// 		return (_root);
+			// 	return const_iterator(minimum(_root));
+			// }
 
 			iterator			end()
 			{
@@ -119,12 +119,12 @@ namespace ft
 				return iterator(maximum(_root));				
 			}
 
-			const_iterator		end() const
-			{
-				if (_size == 0)
-					return (_root);
-				return const_iterator(maximum(_root));
-			}
+			// const_iterator		end() const
+			// {
+			// 	if (_size == 0)
+			// 		return (_root);
+			// 	return const_iterator(maximum(_root));
+			// }
 		
 			// reverse_iterator rbegin() {return reverse_iterator(end()--);}
 			// const_reverse_iterator rbegin() const {return const_reverse_iterator(end()--);}
@@ -178,7 +178,11 @@ namespace ft
 				std::cout << r->value << "\n"; 
 				print(r->l_child, space); 
 			}
-	};
+
+			key_compare key_comp() const { return (key_compare()); };
+
+			value_compare value_comp() const { return (value_compare(key_compare())); };
+
 
 		private :
 
@@ -194,7 +198,7 @@ namespace ft
 
 			node_pointer	new_node(const value_type& v, node_pointer parent)
 			{
-				node_pointer n = _alloc_type.allocate(1);
+				node_pointer n = _alloc.allocate(1);
 				_alloc.construct(n, node_type(v, parent));
 				_size++;
 				return (n);
@@ -232,9 +236,9 @@ namespace ft
 			{
 				node_pointer	n = _root;
 
-				while (n && (value_compare(key_compare(v, n->value)) || value_compare(key_compare(n->value), v))) // while n && n != v
+				while (n && (value_comp()(v, n->value) || value_comp()(n->value, v))) // while n && n != v
 				{
-					if (value_compare(key_compare(v, n->value)))
+					if (value_comp()(v, n->value))
 						n = n->l_child;
 					else
 						n = n->r_child;
@@ -242,7 +246,7 @@ namespace ft
 				return (n);
 			}
 
-			bool	add(const T v)	// returns 1 if value was added, 0 if exists already
+			bool	add(const value_type & v)	// returns 1 if value was added, 0 if exists already
 			{
 				if (findValue(v)) // If value already exists we cannot add it
 					return (0); 
@@ -251,9 +255,9 @@ namespace ft
 				{
 					while (1) // Finding which node will become parent of new value v
 					{
-						if (value_compare(key_compare(v, parent->value))  && parent->l_child)
+						if (value_comp()(v, parent->value) && parent->l_child)
 							parent = parent->l_child;
-						else if (value_compare(key_compare(parent->value), v)) && parent->r_child)
+						else if (value_comp()(parent->value, v) && parent->r_child)
 							parent = parent->r_child;
 						else
 							break ;
@@ -265,11 +269,11 @@ namespace ft
 				// 	return (0);
 				if (parent == NULL)			// Now linking new node to parent 
 					_root = n;
-				else if (value_compare(key_compare(v, parent->value)) )
+				else if (value_comp()(v, parent->value))
 					parent->l_child = n;
 				else
 					parent->r_child = n;
-				balanceTree(findValue(v));
+				balance(findValue(v));
 				return (1);
 			}
 
@@ -406,7 +410,7 @@ namespace ft
 					_root = l_child;
 			}
 
-
+	};
 }
 
 #endif

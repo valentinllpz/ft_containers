@@ -1,14 +1,14 @@
-// #include "map.hpp"
+#include "map.hpp"
 #include <string>
 #include <map>
 #include <iostream>
 
 int main ()
 {
-	std::map<int, std::string> mymap;
-
-	mymap.insert(ft::make_pair<1, "bonjour">);
- 	for (std::map<int,std::string>::iterator it=mymap.begin(); it!=mymap.end(); ++it)
+	ft::map<int, std::string> mymap;
+	std::string t = "test";
+	mymap.insert(ft::pair<int, std::string>(1, t));
+ 	for (ft::map<int,std::string>::iterator it=mymap.begin(); it!=mymap.end(); ++it)
     	std::cout << it->first << " => " << it->second << '\n';
 	return (0);
 }
