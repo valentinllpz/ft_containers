@@ -6,7 +6,7 @@
 /*   By: vlugand- <vlugand-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/21 19:06:34 by vlugand-          #+#    #+#             */
-/*   Updated: 2022/03/03 22:39:47 by vlugand-         ###   ########.fr       */
+/*   Updated: 2022/03/04 14:21:22 by vlugand-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,8 +146,39 @@ namespace ft
 
 			// mapped_type& operator[] (const key_type& k)
 			// {
-			// 		???
+			// 		??? insert needed
 			// }
+
+			/* ************************************************************************** */
+			/*                     		       MODIFIERS                                  */
+			/* ************************************************************************** */
+
+			pair<iterator, bool>	insert(const value_type& val)
+			{
+				bool added = add(val);
+				ft::pair<iterator, bool> ret = ft::make_pair(iterator(findValue(val)), added);
+				return (ret);
+			}
+
+			/*
+			its member pair::first set to an iterator pointing to either the newly inserted element or to the element with an equivalent key in the map. The pair::second element in the pair is set to true if a new element was inserted or false if an equivalent key already existed.
+
+			*/
+
+					// DEBUG
+			void		print(node_pointer r, int space)
+			{
+				if (r == NULL)
+					return ;
+				space += 5; 
+				print(r->r_child, space);
+				std::cout << std::endl;
+				for (int i = 5; i < space; i++)
+					std::cout << " ";
+				std::cout << r->value << "\n"; 
+				print(r->l_child, space); 
+			}
+	};
 
 		private :
 
@@ -211,34 +242,33 @@ namespace ft
 				return (n);
 			}
 
-			int		add(const T v)
+			bool	add(const T v)	// returns 1 if value was added, 0 if exists already
 			{
 				if (findValue(v)) // If value already exists we cannot add it
 					return (0); 
 				node_pointer parent = _root;
 				if (parent)
 				{
-					while (1) // We need first to find which node will become parent of new value v
+					while (1) // Finding which node will become parent of new value v
 					{
-						if (v < parent->value && parent->l_child)
+						if (value_compare(key_compare(v, parent->value))  && parent->l_child)
 							parent = parent->l_child;
-						else if (parent->value < v && parent->r_child)
+						else if (value_compare(key_compare(parent->value), v)) && parent->r_child)
 							parent = parent->r_child;
 						else
 							break ;
 					}
 				}
-				node_pointer n = new Node<T>(v, parent);
+				node_pointer n = new_node(v, parent);
 
-				if (n == NULL)
-					return (0);
+				// if (n == NULL)
+				// 	return (0);
 				if (parent == NULL)			// Now linking new node to parent 
 					_root = n;
-				else if (v < parent->value)
+				else if (value_compare(key_compare(v, parent->value)) )
 					parent->l_child = n;
 				else
 					parent->r_child = n;
-				++_size;
 				balanceTree(findValue(v));
 				return (1);
 			}
@@ -376,20 +406,7 @@ namespace ft
 					_root = l_child;
 			}
 
-			// DEBUG
-			void		print(node_pointer  r, int space)
-			{
-				if (r == NULL)
-					return ;
-				space += 5; 
-				print(r->r_child, space);
-				std::cout << std::endl;
-				for (int i = 5; i < space; i++)
-					std::cout << " ";
-				std::cout << r->value << "\n"; 
-				print(r->l_child, space); 
-			}
-	};
+
 }
 
 #endif
