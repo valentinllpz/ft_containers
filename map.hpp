@@ -6,7 +6,7 @@
 /*   By: vlugand- <vlugand-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/21 19:06:34 by vlugand-          #+#    #+#             */
-/*   Updated: 2022/03/07 19:10:13 by vlugand-         ###   ########.fr       */
+/*   Updated: 2022/03/07 19:59:40 by vlugand-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,12 +32,12 @@ namespace ft
 			/*                     		    MEMBER TYPES                                  */
 			/* ************************************************************************** */
 
-			typedef	Key										key_type;
-			typedef T										mapped_type;
-			typedef ft::pair<const key_type, mapped_type>	value_type;
-			typedef ft::Node<value_type>					node_type;
-      		typedef ft::Node<value_type>*					node_pointer;
-			typedef Compare									key_compare;
+			typedef	Key											key_type;
+			typedef T											mapped_type;
+			typedef ft::pair<const key_type, mapped_type>		value_type;
+			typedef ft::Node<value_type>						node_type;
+      		typedef ft::Node<value_type>*						node_pointer;
+			typedef Compare										key_compare;
 			
 			class	value_compare //: public std::binary_function<value_type, value_type, bool >
 			{ 
@@ -53,20 +53,22 @@ namespace ft
 					bool operator() (const value_type& x, const value_type& y) const { return comp(x.first, y.first); }
 			};
 			
-			typedef Alloc										allocator_type;
-			// typedef typename allocator_type::template rebind<node_type>::other node_allocator;
-			typedef typename allocator_type::reference			reference;
-			typedef typename allocator_type::const_reference	const_reference;
-			typedef typename allocator_type::pointer			pointer;
-			typedef typename allocator_type::const_pointer		const_pointer;
+			typedef Alloc															allocator_type;
+			typedef typename allocator_type::template rebind<node_type>::other		node_allocator;
+			// we need to use alloc for both our pair and the node, see doc: https://alp.developpez.com/tutoriels/templaterebinding/
 
-			typedef ft::map_iterator<value_type>				iterator;
-			// typedef ft::map_iterator<value_type const>		const_iterator;
-			// typedef ft::reverse_iterator<iterator>        	reverse_iterator;
-      		// typedef ft::reverse_iterator<const_iterator>  	const_reverse_iterator;
+			typedef typename allocator_type::reference				reference;
+			typedef typename allocator_type::const_reference		const_reference;
+			typedef typename allocator_type::pointer				pointer;
+			typedef typename allocator_type::const_pointer			const_pointer;
 
-			typedef std::ptrdiff_t								difference_type; //iterator_traits<iterator>::difference_type
-			typedef size_t										size_type;
+			typedef ft::map_iterator<value_type>					iterator;
+			// typedef ft::map_iterator<value_type const>			const_iterator;
+			// typedef ft::reverse_iterator<iterator>        		reverse_iterator;
+      		// typedef ft::reverse_iterator<const_iterator>  		const_reverse_iterator;
+
+			typedef std::ptrdiff_t									difference_type; //iterator_traits<iterator>::difference_type
+			typedef size_t											size_type;
 
 			/* ************************************************************************** */
 			/*                     			CONSTRUCTORS                                  */
@@ -188,7 +190,7 @@ namespace ft
 		private :
 
 			node_pointer						_root;
-			allocator_type						_alloc;
+			node_allocator						_alloc;
 			key_compare							_comp;
 			size_type							_size;
 			const size_type						_max_size;
