@@ -6,7 +6,7 @@
 /*   By: vlugand- <vlugand-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/24 17:25:25 by vlugand-          #+#    #+#             */
-/*   Updated: 2022/02/24 18:13:32 by vlugand-         ###   ########.fr       */
+/*   Updated: 2022/03/07 23:24:22 by vlugand-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ namespace ft
 		/*                     		  MEMBER FUNCTIONS                                */
 		/* ************************************************************************** */
 
-		pair() {}
+		pair() : first(), second() {}
 		template<class U, class V>	pair(const pair<U,V>& pr) : first(pr.first), second(pr.second) {}
 		pair(const first_type& a, const second_type& b) : first(a), second(b) {}
 		~pair() {}

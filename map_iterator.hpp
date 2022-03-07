@@ -6,7 +6,7 @@
 /*   By: vlugand- <vlugand-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/01 17:42:12 by vlugand-          #+#    #+#             */
-/*   Updated: 2022/03/07 20:01:17 by vlugand-         ###   ########.fr       */
+/*   Updated: 2022/03/07 23:39:49 by vlugand-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,8 +69,8 @@ namespace ft
 
 		// Dereferencement operators:
 
-			reference operator*() const { return (_node->value); }
-			pointer operator->() const { return &(_node->value); }	
+			reference	operator*() const { return (_node->value); }
+			pointer 	operator->() const { return &(_node->value); }	
 
 		// Increment / decrement operators:
 

@@ -6,7 +6,7 @@
 /*   By: vlugand- <vlugand-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 14:59:27 by vlugand-          #+#    #+#             */
-/*   Updated: 2022/03/03 21:45:07 by vlugand-         ###   ########.fr       */
+/*   Updated: 2022/03/07 22:32:26 by vlugand-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,10 +26,11 @@ namespace ft
 			Node	*parent;
 			Node	*l_child;
 			Node	*r_child;
+			bool	end;
 
-			Node() : value(0), parent(NULL), l_child(NULL), r_child(NULL) {}
-			Node(const T & v) : value(v), parent(NULL), l_child(NULL), r_child(NULL) {}
-			Node(const T & v, Node<T> *n) : value(v), parent(n), l_child(NULL), r_child(NULL) {}
+			Node() : parent(NULL), l_child(NULL), r_child(NULL), end(false) {}
+			// Node(const T & v) : value(v), parent(NULL), l_child(NULL), r_child(NULL), end(false) {}
+			Node(const T & v, Node<T> *n) : value(v), parent(n), l_child(NULL), r_child(NULL), end(false) {}
 			~Node() {}
 	};
 

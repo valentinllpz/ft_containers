@@ -6,7 +6,7 @@
 /*   By: vlugand- <vlugand-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/21 19:06:34 by vlugand-          #+#    #+#             */
-/*   Updated: 2022/03/07 19:59:40 by vlugand-         ###   ########.fr       */
+/*   Updated: 2022/03/07 23:59:41 by vlugand-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,8 +75,11 @@ namespace ft
 			/* ************************************************************************** */
 
 			// Empty container constructor (default constructor): Constructs an empty container, with no elements ( = a map of size 0)
-			explicit map(const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) : _root(NULL), _comp(comp), _alloc(alloc), _size(0), _max_size(alloc.max_size()) {}
-
+			explicit map(const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) : _root(NULL), _alloc(alloc), _comp(comp), _size(0), _max_size(alloc.max_size())
+			{
+				_end = _alloc.allocate(1);
+				_alloc.construct(_end, node_type());
+			}
 			// // Range constructor: Constructs a container with as many elements as the range [first,last), with each element constructed from its corresponding element in that range, in the same order.
 			// template <class InputIterator>
 			// map(typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type first, InputIterator last, const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) : _root(NULL), _alloc(alloc), _comp(comp)
@@ -86,7 +89,7 @@ namespace ft
 			// }
 
 			// Copy constructor: Constructs a container with a copy of each of the elements in x.
-			map(const map & x) : _root(x.root), _alloc(x.alloc), _comp(x.comp), _size(x.size), _max_size(x.max_size) {}
+			map(const map & x) : _root(x._root), _alloc(x._alloc), _comp(x._comp), _size(x._size), _max_size(x._max_size), _end(x._end) {}
 
 			~map() {}
 
@@ -115,12 +118,7 @@ namespace ft
 			// 	return const_iterator(minimum(_root));
 			// }
 
-			iterator			end()
-			{
-				if (_size == 0)
-					return (_root);
-				return iterator(maximum(_root));				
-			}
+			iterator			end()	{ return (iterator(_end)); }
 
 			// const_iterator		end() const
 			// {
@@ -163,12 +161,25 @@ namespace ft
 				return (ret);
 			}
 
-			/*
-			its member pair::first set to an iterator pointing to either the newly inserted element or to the element with an equivalent key in the map. The pair::second element in the pair is set to true if a new element was inserted or false if an equivalent key already existed.
+			iterator	insert(iterator position, const value_type& val)
+			{
+				(void)position;
+				return (insert(val).first);
+			}
 
-			*/
+			template <class InputIterator>
+			void	insert(InputIterator first, InputIterator last)
+			{
+				while (first != last)
+				{
+					insert(*first);
+					++first;
+				}
+			}
 
-					// DEBUG
+
+
+			// DEBUG
 			void		print(node_pointer r, int space)
 			{
 				if (r == NULL)
@@ -190,6 +201,7 @@ namespace ft
 		private :
 
 			node_pointer						_root;
+			node_pointer						_end; // _root's parent node
 			node_allocator						_alloc;
 			key_compare							_comp;
 			size_type							_size;
@@ -203,7 +215,6 @@ namespace ft
 			{
 				node_pointer n = _alloc.allocate(1);
 				_alloc.construct(n, node_type(v, parent));
-				_size++;
 				return (n);
 			}
 
@@ -249,6 +260,13 @@ namespace ft
 				return (n);
 			}
 
+			void	updateEnd()
+			{
+				_end->l_child = _root;
+				_end->r_child = _root;
+				_root->parent = _end;
+			}
+
 			bool	add(const value_type & v)	// returns 1 if value was added, 0 if exists already
 			{
 				if (findValue(v)) // If value already exists we cannot add it
@@ -267,9 +285,6 @@ namespace ft
 					}
 				}
 				node_pointer n = new_node(v, parent);
-
-				// if (n == NULL)
-				// 	return (0);
 				if (parent == NULL)			// Now linking new node to parent 
 					_root = n;
 				else if (value_comp()(v, parent->value))
@@ -277,6 +292,7 @@ namespace ft
 				else
 					parent->r_child = n;
 				balance(findValue(v));
+				_size++;
 				return (1);
 			}
 
@@ -358,6 +374,7 @@ namespace ft
 					rightRotate(tree);
 				}
 				balance(tree->parent);
+				updateEnd();
 			}
 
 			int		depth(node_pointer tree) const
