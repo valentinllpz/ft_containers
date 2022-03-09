@@ -6,7 +6,7 @@
 /*   By: vlugand- <vlugand-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/21 19:06:34 by vlugand-          #+#    #+#             */
-/*   Updated: 2022/03/09 01:08:13 by vlugand-         ###   ########.fr       */
+/*   Updated: 2022/03/09 19:05:33 by vlugand-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,18 +57,18 @@ namespace ft
 			typedef typename allocator_type::template rebind<node_type>::other		node_allocator;
 			// we need to use alloc for both our pair and the node, see doc: https://alp.developpez.com/tutoriels/templaterebinding/
 
-			typedef typename allocator_type::reference				reference;
-			typedef typename allocator_type::const_reference		const_reference;
-			typedef typename allocator_type::pointer				pointer;
-			typedef typename allocator_type::const_pointer			const_pointer;
+			typedef typename allocator_type::reference						reference;
+			typedef typename allocator_type::const_reference				const_reference;
+			typedef typename allocator_type::pointer						pointer;
+			typedef typename allocator_type::const_pointer					const_pointer;
 
-			typedef ft::map_iterator<value_type>					iterator;
-			typedef ft::map_iterator<value_type const>				const_iterator;
-			// typedef ft::reverse_iterator<iterator>        		reverse_iterator;
-      		// typedef ft::reverse_iterator<const_iterator>  		const_reverse_iterator;
+			typedef ft::map_iterator<value_type, node_pointer>				iterator;
+			typedef ft::map_iterator<const value_type, node_pointer>		const_iterator;
+			typedef ft::reverse_iterator<iterator>							reverse_iterator;
+      		typedef ft::reverse_iterator<const_iterator>  					const_reverse_iterator;
 
-			typedef std::ptrdiff_t									difference_type; //iterator_traits<iterator>::difference_type
-			typedef size_t											size_type;
+			typedef std::ptrdiff_t											difference_type; 	//iterator_traits<iterator>::difference_type
+			typedef size_t													size_type;
 
 			/* ************************************************************************** */
 			/*                     			CONSTRUCTORS                                  */
@@ -107,30 +107,30 @@ namespace ft
 			iterator			begin()
 			{
 				if (_size == 0)
-					return (_root);
+					return iterator(_root);
 				return iterator(minimum(_root));				
 			}
 
 			const_iterator		begin() const
 			{
 				if (_size == 0)
-					return (_root);
+					return const_iterator(_root);
 				return const_iterator(minimum(_root));
 			}
 
-			iterator			end()	{ return (iterator(_end)); }
+			iterator			end() { return (iterator(_end)); }
 
 			const_iterator		end() const
 			{
 				if (_size == 0)
-					return (_root);
+					return const_iterator(_root);
 				return const_iterator(maximum(_root));
 			}
 		
-			// reverse_iterator rbegin() {return reverse_iterator(end()--);}
-			// const_reverse_iterator rbegin() const {return const_reverse_iterator(end()--);}
-			// reverse_iterator rend() {return reverse_iterator(begin());}
-			// const_reverse_iterator rend() const {return const_reverse_iterator(begin());}
+			reverse_iterator rbegin() { return reverse_iterator(end()--); }
+			const_reverse_iterator rbegin() const { return const_reverse_iterator(end()--); }
+			reverse_iterator rend() { return reverse_iterator(begin()); }
+			const_reverse_iterator rend() const { return const_reverse_iterator(begin()); }
 
 
 			/* ************************************************************************** */
@@ -217,6 +217,42 @@ namespace ft
 				x._size = tmp_size;
 			}
 
+			void		clear()
+			{
+				eraseFrom(_root);
+				// _size = 0; ?
+			}
+
+			/* ************************************************************************** */
+			/*                     		       OBSERVERS                                  */
+			/* ************************************************************************** */
+
+			key_compare key_comp() const { return (key_compare()); };
+
+			value_compare value_comp() const { return (value_compare(key_compare())); };
+
+			/* ************************************************************************** */
+			/*                     		      OPERATIONS                                  */
+			/* ************************************************************************** */
+
+			iterator	find(const key_type& k)
+			{
+				node_pointer n = findKey(k);
+
+				if (n)
+					return iterator(n);
+				return end();
+			}
+
+			const_iterator	find(const key_type& k) const
+			{
+				node_pointer n = findKey(k);
+
+				if (n)
+					return const_iterator(n);
+				return end();
+			}
+
 			// DEBUG
 			void		print(node_pointer r, int space)
 			{
@@ -231,15 +267,10 @@ namespace ft
 				print(r->l_child, space); 
 			}
 
-			key_compare key_comp() const { return (key_compare()); };
-
-			value_compare value_comp() const { return (value_compare(key_compare())); };
-
-
 		private :
 
 			node_pointer						_root;
-			node_pointer						_end; // _root's parent node
+			node_pointer						_end;	// _root's parent node
 			node_allocator						_alloc;
 			key_compare							_comp;
 			size_type							_size;
@@ -274,9 +305,9 @@ namespace ft
 			{
 				node_pointer	n = _root;
 
-				while (n && (key_compare(k, n->value.first) || key_compare(n->value.first, k))) // while n && k != n->value.first
+				while (n && n->value.first != k)
 				{
-					if (key_compare(k, n->value.first))
+					if (key_compare()(k, n->value.first))
 						n = n->l_child;
 					else
 						n = n->r_child;
@@ -288,7 +319,7 @@ namespace ft
 			{
 				node_pointer	n = _root;
 
-				while (n && (value_comp()(v, n->value) || value_comp()(n->value, v))) // while n && n != v
+				while (n && n->value != v)
 				{
 					if (value_comp()(v, n->value))
 						n = n->l_child;
@@ -372,26 +403,19 @@ namespace ft
 
 			void	eraseFrom(node_pointer node)
 			{
-				if (node != NULL)
+				if (node)
 				{
 					eraseFrom(node->l_child);
 					eraseFrom(node->r_child);
-					delete node; // et size--?
+					_alloc.destroy(node);
+					_alloc.deallocate(node, 1);
+					--_size;
+					if (node == _root)
+						_root = NULL;
 				}
 			}
 
-			void		clear()
-			{
-				if (_size > 0)
-				{
-					eraseFrom(_root->l_child);
-					eraseFrom(_root->r_child);
-					delete _root;
-					_size = 0;
-				}
-			}
-
-			// AVL tree balancing related function
+			// AVL tree balancing related function (see https://cours.etsmtl.ca/SEG/FHenri/inf145/Suppl%C3%A9ments/arbres%20AVL.htm)
 
 			void	balance(node_pointer tree)
 			{

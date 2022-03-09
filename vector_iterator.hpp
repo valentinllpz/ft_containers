@@ -6,14 +6,14 @@
 /*   By: vlugand- <vlugand-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/26 12:45:04 by vlugand-          #+#    #+#             */
-/*   Updated: 2022/03/01 18:59:47 by vlugand-         ###   ########.fr       */
+/*   Updated: 2022/03/09 17:55:19 by vlugand-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef VECTOR_ITERATOR_HPP
 # define VECTOR_ITERATOR_HPP
 
-#include "utils.hpp"
+#include "common.hpp"
 
 // https://www.cplusplus.com/reference/iterator/RandomAccessIterator/
 // https://www.boost.org/sgi/stl/RandomAccessIterator.html
@@ -42,8 +42,6 @@ namespace ft
 		/* ************************************************************************** */
 
 			pointer											_ptr;
-			// we want the pointer to be "protected" because we want to allow children classes to access it
-			// _ptr is also accessible between different instances of the same class
 
 		public:
 		

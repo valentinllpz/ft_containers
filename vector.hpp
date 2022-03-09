@@ -6,7 +6,7 @@
 /*   By: vlugand- <vlugand-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 13:16:39 by vlugand-          #+#    #+#             */
-/*   Updated: 2022/03/09 01:00:29 by vlugand-         ###   ########.fr       */
+/*   Updated: 2022/03/09 17:56:06 by vlugand-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,6 @@
 # define VECTOR_HPP
 
 #include "common.hpp"
-#include "vector_iterator.hpp"
-#include "reverse_iterator.hpp"
 
 namespace ft
 {

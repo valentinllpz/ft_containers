@@ -6,7 +6,7 @@
 /*   By: vlugand- <vlugand-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/01 17:42:12 by vlugand-          #+#    #+#             */
-/*   Updated: 2022/03/07 23:39:49 by vlugand-         ###   ########.fr       */
+/*   Updated: 2022/03/09 17:46:46 by vlugand-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 
 namespace ft
 {
-	template < typename T >
+	template < typename T, typename node_pointer >
 	class map_iterator
 	{
 		public:
@@ -31,7 +31,6 @@ namespace ft
 			typedef T 									value_type;
 			typedef value_type *						pointer;
 			typedef value_type & 						reference;
-			typedef	ft::Node<T> *						node_pointer;
 			typedef std::bidirectional_iterator_tag		iterator_category;
 
 		protected:
@@ -65,7 +64,7 @@ namespace ft
 		
 		// Implicit conversion to const: (https://en.cppreference.com/w/cpp/language/cast_operator)
 		
-			operator map_iterator<value_type const>() const { return map_iterator<value_type const>(_node); }
+			operator map_iterator<const T, node_pointer>() const {return map_iterator<const T, node_pointer>(_node);}
 
 		// Dereferencement operators:
 
