@@ -6,7 +6,7 @@
 /*   By: vlugand- <vlugand-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/21 19:06:34 by vlugand-          #+#    #+#             */
-/*   Updated: 2022/03/07 23:59:41 by vlugand-         ###   ########.fr       */
+/*   Updated: 2022/03/09 01:08:13 by vlugand-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ namespace ft
 			typedef typename allocator_type::const_pointer			const_pointer;
 
 			typedef ft::map_iterator<value_type>					iterator;
-			// typedef ft::map_iterator<value_type const>			const_iterator;
+			typedef ft::map_iterator<value_type const>				const_iterator;
 			// typedef ft::reverse_iterator<iterator>        		reverse_iterator;
       		// typedef ft::reverse_iterator<const_iterator>  		const_reverse_iterator;
 
@@ -111,21 +111,21 @@ namespace ft
 				return iterator(minimum(_root));				
 			}
 
-			// const_iterator		begin() const
-			// {
-			// 	if (_size == 0)
-			// 		return (_root);
-			// 	return const_iterator(minimum(_root));
-			// }
+			const_iterator		begin() const
+			{
+				if (_size == 0)
+					return (_root);
+				return const_iterator(minimum(_root));
+			}
 
 			iterator			end()	{ return (iterator(_end)); }
 
-			// const_iterator		end() const
-			// {
-			// 	if (_size == 0)
-			// 		return (_root);
-			// 	return const_iterator(maximum(_root));
-			// }
+			const_iterator		end() const
+			{
+				if (_size == 0)
+					return (_root);
+				return const_iterator(maximum(_root));
+			}
 		
 			// reverse_iterator rbegin() {return reverse_iterator(end()--);}
 			// const_reverse_iterator rbegin() const {return const_reverse_iterator(end()--);}
@@ -177,7 +177,45 @@ namespace ft
 				}
 			}
 
+			void		erase(iterator position) { remove(*position); }
 
+			size_type	erase(const key_type & k)
+			{
+				node_pointer	n = findKey(k);
+
+				if (n)
+					return (remove(n->value));
+				return (0);
+			}
+
+			void 		erase(iterator first, iterator last)
+			{
+				while (first != last)
+				{
+					remove(*first);
+					++first;
+				}
+			}
+
+			void		swap(map & x)
+			{
+				node_pointer	tmp_root = _root;
+				node_pointer	tmp_end = _end;
+				node_allocator	tmp_alloc = _alloc;
+				key_compare		tmp_comp = _comp;
+				size_type		tmp_size = _size;	
+				
+				_root = x._root;
+				_end = x._end;
+				_alloc = x._alloc;
+				_comp = x._comp;
+				_size = x._size;
+				x._root = tmp_root;
+				x._end = tmp_end;
+				x._alloc = tmp_alloc;
+				x._comp = tmp_comp;
+				x._size = tmp_size;
+			}
 
 			// DEBUG
 			void		print(node_pointer r, int space)
@@ -292,43 +330,44 @@ namespace ft
 				else
 					parent->r_child = n;
 				balance(findValue(v));
-				_size++;
+				++_size;
 				return (1);
 			}
 
-			int		remove(const T & v)
+			bool	remove(const T & v)
 			{
 				node_pointer n = findValue(v);
 				if (n == NULL)
 					return (0);
 				node_pointer parent = n->parent;					// Backing up parent address
-				node_pointer substitute = maximum(n->l_child);		// finding smallest value bigger than n->value
-				if (substitute == NULL) 						// if no substitute found
+				node_pointer substitute = maximum(n->l_child);		// checking left subtree for next smallest value bigger than n->value
+				if (substitute == NULL) 							// if we didn't find the substitute ( = no left subtree)
 				{
-					if (n == _root)
+					if (n == _root)									// if n is _root, its right subtree will replace it
 						_root = n->r_child;
-					else if (n->parent->l_child == n)
-						n->parent->l_child = n->r_child;
+					else if (n->parent->l_child == n)				// if next smallest value bigger than n->value is n->parent 
+						n->parent->l_child = n->r_child;			// we know there is no left subtree so we can replace n->parent->l_child (= n) by n->r_child subtree
 					else
-						n->parent->r_child = n->r_child;
+						n->parent->r_child = n->r_child;			// if next smallest value bigger than n->value is n->r_child, let's replace n by its right subtree 
 					if (n->r_child != NULL)
-						n->r_child->parent = n->parent;
+						n->r_child->parent = n->parent;				// now setting r_child->parent pointer 
 				}
-				else
+				else												// if we found the subtitute ( = left subtree exists)
 				{
-					n->value = substitute->value;
-					if (substitute->parent->l_child == substitute)
-						substitute->parent->l_child = substitute->l_child;
+					n->value = substitute->value;								// we replace n->value by the new value
+					if (substitute->parent->l_child == substitute)				// if n->l_child has no right subtree
+						substitute->parent->l_child = substitute->l_child;		
 					else
-						substitute->parent->r_child = substitute->l_child;
+						substitute->parent->r_child = substitute->l_child;		
 					if (substitute->l_child != NULL)
-						substitute->l_child->parent = substitute->parent;
+						substitute->l_child->parent = substitute->parent; 		// now setting l_child->parent pointer 
 					n = substitute;
 				}
-				delete n;
-				--_size;
+				_alloc.destroy(n);
+				_alloc.deallocate(n, 1);
 				balanceTree(parent);
-				return 1;
+				--_size;
+				return (1);
 			}
 
 			void	eraseFrom(node_pointer node)

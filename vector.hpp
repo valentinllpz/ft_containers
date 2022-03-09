@@ -6,7 +6,7 @@
 /*   By: vlugand- <vlugand-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 13:16:39 by vlugand-          #+#    #+#             */
-/*   Updated: 2022/03/03 20:16:24 by vlugand-         ###   ########.fr       */
+/*   Updated: 2022/03/09 01:00:29 by vlugand-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,6 @@ namespace ft
 				_array = _alloc.allocate(n);
 				for (size_type i = 0; i < _size; i++)
 					_alloc.construct(&_array[i], val);
-				return ;
 			};
 
 			// Range constructor: Constructs a container with as many elements as the range [first,last), with each element constructed from its corresponding element in that range, in the same order.
@@ -78,7 +77,6 @@ namespace ft
 					_alloc.construct(&_array[i], *it);
 					i++;
 				}
-				return ;
 			}
 
 			// Copy constructor: Constructs a container with a copy of each of the elements in x, in the same order.
@@ -87,7 +85,6 @@ namespace ft
 				_array = _alloc.allocate(_capacity);
 				for (size_type i = 0; i < _size; i++)
 					_alloc.construct(&_array[i], x[i]);
-				return ;
 			};
 
 			~vector()
@@ -152,12 +149,11 @@ namespace ft
 					erase(begin() + n, end());
 				else if (n > _size)
 					insert(end(), n - _size, val);
-				return ;
 			}
 
 			size_type	capacity() const { return (_capacity); }
 
-			bool		empty() const {	return (_size == 0 ? true : false)); }
+			bool		empty() const {	return (_size == 0 ? true : false); }
 
 			void		reserve(size_type n)
 			{
@@ -175,7 +171,6 @@ namespace ft
 				}
 				else if (n > _max_size)
 					throw (std::length_error("vector"));
-				return ;
 			}
 
 			/* ************************************************************************** */
@@ -235,15 +230,13 @@ namespace ft
 					reserve(_capacity * 2);
 				}
 				_alloc.construct(&_array[_size], val);
-				_size++;
-				return ;
+				++_size;
 			}
 
 			void	pop_back()
 			{
 				_alloc.destroy(&_array[_size - 1]);
 				--_size;
-				return ;
 			}
 
 			iterator insert(iterator position, const value_type& val)
@@ -308,7 +301,6 @@ namespace ft
 					it++;
 				}
 				_size += n;
-				return ;
 			}
 
 			iterator	erase(iterator position) { return (erase(position, position + 1));	}
@@ -351,7 +343,6 @@ namespace ft
 				_alloc = _alloc_tmp;
 				_size = _size_tmp;
 				_capacity = _capacity_tmp;
-				return ;
 			}
 
 			void	clear() { resize(0); }
