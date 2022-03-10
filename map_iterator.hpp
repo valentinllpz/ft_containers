@@ -6,7 +6,7 @@
 /*   By: vlugand- <vlugand-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/01 17:42:12 by vlugand-          #+#    #+#             */
-/*   Updated: 2022/03/09 17:46:46 by vlugand-         ###   ########.fr       */
+/*   Updated: 2022/03/10 20:19:21 by vlugand-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,11 @@ namespace ft
 		/* ************************************************************************** */
 
 			map_iterator() : _node(NULL) {}
+
 			map_iterator(node_pointer node) : _node(node) {}
+
 			map_iterator(const map_iterator & src) : _node(src._node) {}
+
 			~map_iterator() {}
 
 		/* ************************************************************************** */
@@ -69,6 +72,7 @@ namespace ft
 		// Dereferencement operators:
 
 			reference	operator*() const { return (_node->value); }
+
 			pointer 	operator->() const { return &(_node->value); }	
 
 		// Increment / decrement operators:
@@ -136,6 +140,7 @@ namespace ft
 		// Comparison operators:
 
 			bool	operator==(const map_iterator& lhs) { return (_node == lhs.base()); };
+			
 			bool	operator!=(const map_iterator& lhs) { return (_node != lhs.base()); };
 
 	};

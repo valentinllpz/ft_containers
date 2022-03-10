@@ -6,7 +6,7 @@
 /*   By: vlugand- <vlugand-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 13:16:39 by vlugand-          #+#    #+#             */
-/*   Updated: 2022/03/09 17:56:06 by vlugand-         ###   ########.fr       */
+/*   Updated: 2022/03/10 22:48:20 by vlugand-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,18 +120,20 @@ namespace ft
 
 
 			iterator					begin() { return iterator(_array); }
+
 			const_iterator				begin() const {return const_iterator(_array); }
 
 			iterator					end() { return iterator(_array + _size); }
+
 			const_iterator				end() const { return const_iterator(_array + _size); }
 
 			reverse_iterator 			rbegin() { return reverse_iterator(end()); }
+
 			const_reverse_iterator 		rbegin() const { return const_reverse_iterator(end()); }
 
 			reverse_iterator 			rend() { return reverse_iterator(begin()); }
+
 			const_reverse_iterator 		rend() const { return const_reverse_iterator(begin()); }
-
-
 
 			/* ************************************************************************** */
 			/*                     			   CAPACITY                                   */
@@ -364,9 +366,9 @@ namespace ft
 				const size_type			_max_size;
 	};
 
-		/* ************************************************************************** */
-		/*                     	 NON-MEMBER FUNCTION OVERLOADS                        */
-		/* ************************************************************************** */
+	/* ************************************************************************** */
+	/*                     		  NON-MEMBER OVERLOADS		                      */
+	/* ************************************************************************** */
 
 		template <class T, class Alloc>
 		bool operator== (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
@@ -380,13 +382,10 @@ namespace ft
 		bool operator!= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) { return (!(lhs == rhs)); }
 
 		template <class T, class Alloc>
-		bool operator< (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
-		{
-			return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
-		}
+		bool operator< (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)	{ return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end())); }
 
 		template <class T, class Alloc>
-		bool operator<= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs){ return (lhs < rhs || lhs == rhs); }
+		bool operator<= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) { return (lhs < rhs || lhs == rhs); }
 
 		template <class T, class Alloc>
 		bool operator> (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) { return (rhs < lhs); }

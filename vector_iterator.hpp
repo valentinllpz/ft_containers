@@ -6,7 +6,7 @@
 /*   By: vlugand- <vlugand-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/26 12:45:04 by vlugand-          #+#    #+#             */
-/*   Updated: 2022/03/09 17:55:19 by vlugand-         ###   ########.fr       */
+/*   Updated: 2022/03/10 16:45:58 by vlugand-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,8 +50,11 @@ namespace ft
 		/* ************************************************************************** */
 
 			vector_iterator() : _ptr(NULL) {}
+
 			vector_iterator(pointer ptr) : _ptr(ptr) {}
+
 			vector_iterator(const vector_iterator & src) : _ptr(src._ptr) {}
+			
 			~vector_iterator() {}
 
 		/* ************************************************************************** */
@@ -70,7 +73,9 @@ namespace ft
 		// Dereferencement operators:
 
 			reference operator*() const { return *_ptr; }
-			pointer operator->() const { return _ptr; }	
+
+			pointer operator->() const { return _ptr; }
+
 			reference operator[](size_t i) { return *(_ptr + i); }
 
 		// Increment / decrement operators:
@@ -118,8 +123,11 @@ namespace ft
 
 			/* here we need the "friend" keyword because the (+) operator comes from [n] which is not a member of this class) */
 			friend vector_iterator<T> operator+(difference_type n, const vector_iterator & rhs) { return (n + rhs._ptr); } // [n + a]
+
 			vector_iterator<T> operator+(difference_type n) const { return (_ptr + n); } // [a + n]
+
 			vector_iterator<T> operator-(difference_type n) const { return (_ptr - n); } // [a - n]
+			
 			difference_type operator-(const vector_iterator & rhs) const { return (_ptr - rhs._ptr); } // [a - b]
 
 			/* when (=) is involved we need to return a pointer to the current modified instance (allows chaining a = b = c) */
@@ -173,14 +181,19 @@ namespace ft
 
 	template<typename it1, typename it2>
 	bool operator==(const vector_iterator<it1>& a, const vector_iterator<it2>& b) { return (a.base() == b.base()); }
+
 	template<typename it1, typename it2>
 	bool operator!=(const vector_iterator<it1>& a, const vector_iterator<it2>& b) { return (a.base() != b.base()); }
+
 	template<typename it1, typename it2>
 	bool operator<(const vector_iterator<it1>& a, const vector_iterator<it2>& b) { return (a.base() < b.base()); }
+
 	template<typename it1, typename it2>
 	bool operator<=(const vector_iterator<it1>& a, const vector_iterator<it2>& b) { return (a.base() <= b.base()); }
+
 	template<typename it1, typename it2>
 	bool operator>(const vector_iterator<it1>& a, const vector_iterator<it2>& b) { return (a.base() > b.base()); }
+	
 	template<typename it1, typename it2>
 	bool operator>=(const vector_iterator<it1>& a, const vector_iterator<it2>& b) { return (a.base() >= b.base()); }
 
