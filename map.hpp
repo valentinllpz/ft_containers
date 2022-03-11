@@ -6,7 +6,7 @@
 /*   By: vlugand- <vlugand-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/21 19:06:34 by vlugand-          #+#    #+#             */
-/*   Updated: 2022/03/11 16:06:54 by vlugand-         ###   ########.fr       */
+/*   Updated: 2022/03/11 17:44:09 by vlugand-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,12 +105,11 @@ namespace ft
 
 			map& operator= (const map& x)
 			{
-				clear();
-				std::cout << "size = " << _size << std::endl;
-				insert(x.begin(), x.end());
-
-				
-				
+				if (this != &x)
+				{
+					clear();
+					insert(x.begin(), x.end());
+				}
 				return (*this);
 			}
 
@@ -121,14 +120,14 @@ namespace ft
 			iterator			begin()
 			{
 				if (_size == 0)
-					return iterator(_root);
+					return iterator(_end);
 				return iterator(minimum(_root));				
 			}
 
 			const_iterator		begin() const
 			{
 				if (_size == 0)
-					return const_iterator(_root);
+					return const_iterator(_end);
 				return const_iterator(minimum(_root));
 			}
 
@@ -189,11 +188,14 @@ namespace ft
 			template <class InputIterator>
 			void	insert(InputIterator first, InputIterator last)
 			{
+				std::cout << "insert start" << std::endl;
 				while (first != last)
 				{
+					std::cout << first->first << std::endl;
 					insert(*first);
 					++first;
 				}
+				std::cout << "insert end" << std::endl;
 			}
 
 			void		erase(iterator position) { remove(*position); }
@@ -243,7 +245,13 @@ namespace ft
 			void		clear()
 			{
 				eraseFrom(_root);
-				// _size = 0; ?
+				// if (_end)
+				// {
+				// 	_alloc.destroy(_end);
+				// 	_alloc.deallocate(_end, 1);
+				// 	_end = NULL;
+				// }
+				// _root = NULL;
 			}
 
 			/* ************************************************************************** */

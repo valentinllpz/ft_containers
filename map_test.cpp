@@ -32,6 +32,9 @@ void ftlol()
   first['z']=32;
 
   second=first;                // second now contains 3 ints
+  std::cout << "Size of first: " << first.size() << '\n';
+  std::cout << "Size of second: " << second.size() << '\n';
+
   first=ft::map<char,int>();  // and first is now empty
 
   std::cout << "Size of first: " << first.size() << '\n';
