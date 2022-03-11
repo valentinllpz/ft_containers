@@ -21,10 +21,10 @@
 #include <iostream>
 #include <map>
 
-int main ()
+void ftlol()
 {
-  std::map<int,int> mymap;
-  std::map<int,int>::iterator itlow,itup;
+	  ft::map<int,int> mymap;
+  ft::map<int,int>::iterator itlow,itup;
 
   mymap[1]=20;
   mymap[2]=40;
@@ -32,15 +32,25 @@ int main ()
   mymap[5]=80;
   mymap[6]=100;
 
-  itlow=mymap.lower_bound (3);  // itlow points to b
-  itup=mymap.upper_bound (3);   // itup points to e (not d!)
 
-	std::cout << itlow->first << " | " << itup->first << std::endl;
-  mymap.erase(itlow,itup);        // erases [itlow,itup)
+	ft::map<int,int> newmap(mymap);
+	std::cout << &mymap << " vs " << &newmap << std::endl;
+}
 
-  // print content:
-  for (std::map<int,int>::iterator it=mymap.begin(); it!=mymap.end(); ++it)
-    std::cout << it->first << " => " << it->second << '\n';
+int main ()
+{
+
+
+//   itlow=mymap.lower_bound (3);  // itlow points to b
+//   itup=mymap.upper_bound (3);   // itup points to e (not d!)
+
+// 	std::cout << itlow->first << " | " << itup->first << std::endl;
+//   mymap.erase(itlow,itup);        // erases [itlow,itup)
+
+//   // print content:
+//   for (ft::map<int,int>::iterator it=mymap.begin(); it!=mymap.end(); ++it)
+//     std::cout << it->first << " => " << it->second << '\n';
+	ftlol();
 
   return 0;
 }

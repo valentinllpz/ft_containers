@@ -79,26 +79,39 @@ namespace ft
 			{
 				_end = _alloc.allocate(1);
 				_alloc.construct(_end, node_type());
+				updateEnd();
 			}
 			
 			// Range constructor: Constructs a container with as many elements as the range [first,last), with each element constructed from its corresponding element in that range, in the same order.
 			template <class InputIterator>
 			map(typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type first, InputIterator last, const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) : _root(NULL), _alloc(alloc), _comp(comp), _size(0), _max_size(alloc.max_size())
 			{
+				_end = _alloc.allocate(1);
+				_alloc.construct(_end, node_type());
+				updateEnd();
 				insert(first, last);
 			}
 
 			// Copy constructor: Constructs a container with a copy of each of the elements in x.
-			map(const map & x) : _root(x._root), _end(x._end), _alloc(x._alloc), _comp(x._comp), _size(x._size), _max_size(x._max_size) {}
+			map(const map & x) : _root(NULL), _alloc(x._alloc), _comp(x._comp), _size(0)
+			{
+				_end = _alloc.allocate(1);
+				_alloc.construct(_end, node_type());
+				updateEnd();
+				insert(x.begin(), x.end());
+			}
 
-			~map() {}
+			~map() { clear(); }
 
-			// map& operator= (const map& x)
-			// {
-			// 	clear_from_node(_root);
-			// 	insert(x.begin(), x.end());
-			// 	return *this;
-			// }
+			map& operator= (const map& x)
+			{
+				clear();
+
+
+				
+				
+				return (*this);
+			}
 
 			/* ************************************************************************** */
 			/*                     			  ITERATORS                                   */
@@ -403,9 +416,12 @@ namespace ft
 
 			void	updateEnd()
 			{
-				_end->l_child = _root;
-				_end->r_child = _root;
-				_root->parent = _end;
+				if (_root)
+				{
+					_end->l_child = _root;
+					_end->r_child = _root;
+					_root->parent = _end;
+				}
 			}
 
 			bool	add(const value_type & v)	// returns 1 if value was added, 0 if exists already
