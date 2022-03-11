@@ -6,7 +6,7 @@
 /*   By: vlugand- <vlugand-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/21 19:06:34 by vlugand-          #+#    #+#             */
-/*   Updated: 2022/03/10 23:00:50 by vlugand-         ###   ########.fr       */
+/*   Updated: 2022/03/11 16:06:54 by vlugand-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,8 @@ namespace ft
 			map& operator= (const map& x)
 			{
 				clear();
-
+				std::cout << "size = " << _size << std::endl;
+				insert(x.begin(), x.end());
 
 				
 				
@@ -164,7 +165,7 @@ namespace ft
 
 				if (n)
 					return (n->value.second);
-				ft::pair<iterator,bool> ret = insert(ft::make_pair(k, mapped_type()));
+				ft::pair<iterator,bool> ret = insert(value_type(k, mapped_type()));
 				return ((*ret.first).second);
 			}
 
@@ -172,7 +173,7 @@ namespace ft
 			/*                     		       MODIFIERS                                  */
 			/* ************************************************************************** */
 
-			pair<iterator, bool>	insert(const value_type& val)
+			ft::pair<iterator, bool>	insert(const value_type& val)
 			{
 				bool added = add(val);
 				ft::pair<iterator, bool> ret = ft::make_pair(iterator(findValue(val)), added);
