@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   map.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vlugand- <vlugand-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: valentin <valentin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/21 19:06:34 by vlugand-          #+#    #+#             */
-/*   Updated: 2022/03/11 17:44:09 by vlugand-         ###   ########.fr       */
+/*   Updated: 2022/03/13 17:43:04 by valentin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,18 +77,18 @@ namespace ft
 			// Empty container constructor (default constructor): Constructs an empty container, with no elements ( = a map of size 0)
 			explicit map(const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) : _root(NULL), _alloc(alloc), _comp(comp), _size(0), _max_size(alloc.max_size())
 			{
-				_end = _alloc.allocate(1);
-				_alloc.construct(_end, node_type());
-				updateEnd();
+				// _end = _alloc.allocate(1);
+				// _alloc.construct(_end, node_type());
+				// updateEnd();
 			}
 			
 			// Range constructor: Constructs a container with as many elements as the range [first,last), with each element constructed from its corresponding element in that range, in the same order.
 			template <class InputIterator>
 			map(typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type first, InputIterator last, const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) : _root(NULL), _alloc(alloc), _comp(comp), _size(0), _max_size(alloc.max_size())
 			{
-				_end = _alloc.allocate(1);
-				_alloc.construct(_end, node_type());
-				updateEnd();
+				// _end = _alloc.allocate(1);
+				// _alloc.construct(_end, node_type());
+				// updateEnd();
 				insert(first, last);
 			}
 
@@ -188,17 +188,18 @@ namespace ft
 			template <class InputIterator>
 			void	insert(InputIterator first, InputIterator last)
 			{
-				std::cout << "insert start" << std::endl;
 				while (first != last)
 				{
 					std::cout << first->first << std::endl;
 					insert(*first);
 					++first;
 				}
-				std::cout << "insert end" << std::endl;
 			}
 
-			void		erase(iterator position) { remove(*position); }
+			void		erase(iterator position)
+			{
+				remove(*position);
+			}
 
 			size_type	erase(const key_type & k)
 			{
@@ -361,7 +362,7 @@ namespace ft
 			// 	print(r->l_child, space); 
 			// }
 
-		private :
+		public :
 
 			node_pointer						_root;
 			node_pointer						_end;	// _root's parent node
@@ -452,7 +453,11 @@ namespace ft
 				}
 				node_pointer n = new_node(v, parent);
 				if (parent == NULL)			// Now linking new node to parent 
+				{
 					_root = n;
+					_end = _alloc.allocate(1);
+					_alloc.construct(_end, node_type());
+				}	
 				else if (value_comp()(v, parent->value))
 					parent->l_child = n;
 				else
@@ -478,7 +483,9 @@ namespace ft
 					else
 						n->parent->r_child = n->r_child;			// if next smallest value bigger than n->value is n->r_child, let's replace n by its right subtree 
 					if (n->r_child != NULL)
-						n->r_child->parent = n->parent;				// now setting r_child->parent pointer 
+						n->r_child->parent = n->parent;			// now setting r_child->parent pointer 
+					_alloc.destroy(n);
+					_alloc.deallocate(n, 1);	
 				}
 				else												// if we found the subtitute ( = left subtree exists)
 				{
@@ -487,6 +494,7 @@ namespace ft
 					tmp->r_child = n->r_child;
 					_alloc.destroy(n);
 					_alloc.deallocate(n, 1);
+					n = tmp;
 					// n->value = substitute->value;								// we replace n->value by the new value
 					if (substitute->parent->l_child == substitute)				// if n->l_child has no right subtree
 						substitute->parent->l_child = substitute->l_child;
@@ -494,12 +502,17 @@ namespace ft
 						substitute->parent->r_child = substitute->l_child;
 					if (substitute->l_child != NULL)
 						substitute->l_child->parent = substitute->parent; 		// now setting l_child->parent pointer 
-					n = substitute;
+					_alloc.destroy(substitute);
+					_alloc.deallocate(substitute, 1);
 				}
-				_alloc.destroy(n);
-				_alloc.deallocate(n, 1);
 				balance(parent);
 				--_size;
+				if (_size == 0 && _end)
+				{
+					_alloc.destroy(_end);
+					_alloc.deallocate(_end, 1);
+					_end = NULL;
+				}
 				return (1);
 			}
 
@@ -513,7 +526,12 @@ namespace ft
 					_alloc.deallocate(node, 1);
 					--_size;
 					if (node == _root)
+					{
 						_root = NULL;
+						_alloc.destroy(_end);
+						_alloc.deallocate(_end, 1);
+						_end = NULL;
+					}
 				}
 			}
 
