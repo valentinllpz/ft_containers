@@ -35,10 +35,15 @@ namespace ft
 			typedef	Key											key_type;
 			typedef T											mapped_type;
 			typedef ft::pair<const key_type, mapped_type>		value_type;
-			typedef ft::Node<value_type>						node_type;
-      		typedef ft::Node<value_type>*						node_pointer;
 			typedef Compare										key_compare;
-			
+		
+		private :
+
+			typedef ft::Node<value_type>											node_type;
+      		typedef ft::Node<value_type>*											node_pointer;
+
+		public :
+
 			class	value_compare //: public std::binary_function<value_type, value_type, bool >
 			{ 
 				friend class	map;
@@ -53,14 +58,18 @@ namespace ft
 					bool operator() (const value_type& x, const value_type& y) const { return comp(x.first, y.first); }
 			};
 			
-			typedef Alloc															allocator_type;
-			typedef typename allocator_type::template rebind<node_type>::other		node_allocator;
-			// we need to use alloc for both our pair and the node, see doc: https://alp.developpez.com/tutoriels/templaterebinding/
-
+			typedef Alloc													allocator_type;
 			typedef typename allocator_type::reference						reference;
 			typedef typename allocator_type::const_reference				const_reference;
 			typedef typename allocator_type::pointer						pointer;
 			typedef typename allocator_type::const_pointer					const_pointer;
+
+		private :
+
+			typedef typename allocator_type::template rebind<node_type>::other		node_allocator;
+			// we need to use alloc for both our pair and the node, see doc: https://alp.developpez.com/tutoriels/templaterebinding/
+
+		public :
 
 			typedef ft::map_iterator<value_type, node_pointer>				iterator;
 			typedef ft::map_iterator<const value_type, node_pointer>		const_iterator;
@@ -70,25 +79,38 @@ namespace ft
 			typedef std::ptrdiff_t											difference_type; 	//iterator_traits<iterator>::difference_type
 			typedef size_t													size_type;
 
+
+		private :
+
+			/* ************************************************************************** */
+			/*                     			 VARIABLES                                    */
+			/* ************************************************************************** */
+
+			node_pointer						_root;
+			node_pointer						_end;	// _root's parent node
+			node_allocator						_alloc;
+			key_compare							_comp;
+			size_type							_size;
+
+		public:
+
 			/* ************************************************************************** */
 			/*                     			CONSTRUCTORS                                  */
 			/* ************************************************************************** */
 
 			// Empty container constructor (default constructor): Constructs an empty container, with no elements ( = a map of size 0)
-			explicit map(const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) : _root(NULL), _alloc(alloc), _comp(comp), _size(0), _max_size(alloc.max_size())
+			explicit map(const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) : _root(NULL), _alloc(alloc), _comp(comp), _size(0)
 			{
-				// _end = _alloc.allocate(1);
-				// _alloc.construct(_end, node_type());
-				// updateEnd();
+				_end = _alloc.allocate(1);
+				_alloc.construct(_end, node_type());
 			}
 			
 			// Range constructor: Constructs a container with as many elements as the range [first,last), with each element constructed from its corresponding element in that range, in the same order.
 			template <class InputIterator>
-			map(typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type first, InputIterator last, const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) : _root(NULL), _alloc(alloc), _comp(comp), _size(0), _max_size(alloc.max_size())
+			map(typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type first, InputIterator last, const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) : _root(NULL), _alloc(alloc), _comp(comp), _size(0)
 			{
-				// _end = _alloc.allocate(1);
-				// _alloc.construct(_end, node_type());
-				// updateEnd();
+				_end = _alloc.allocate(1);
+				_alloc.construct(_end, node_type());
 				insert(first, last);
 			}
 
@@ -97,7 +119,6 @@ namespace ft
 			{
 				_end = _alloc.allocate(1);
 				_alloc.construct(_end, node_type());
-				updateEnd();
 				insert(x.begin(), x.end());
 			}
 
@@ -108,6 +129,8 @@ namespace ft
 				if (this != &x)
 				{
 					clear();
+					_end = _alloc.allocate(1);
+					_alloc.construct(_end, node_type());
 					insert(x.begin(), x.end());
 				}
 				return (*this);
@@ -152,7 +175,7 @@ namespace ft
 
 			size_type		size() const { return (_size); }
 			
-			size_type		max_size() const { return (_max_size); }
+			size_type		max_size() const { return _alloc.max_size(); }
 
 			/* ************************************************************************** */
 			/*                     		    ELEMENT ACCESS                                */
@@ -190,7 +213,6 @@ namespace ft
 			{
 				while (first != last)
 				{
-					std::cout << first->first << std::endl;
 					insert(*first);
 					++first;
 				}
@@ -246,13 +268,6 @@ namespace ft
 			void		clear()
 			{
 				eraseFrom(_root);
-				// if (_end)
-				// {
-				// 	_alloc.destroy(_end);
-				// 	_alloc.deallocate(_end, 1);
-				// 	_end = NULL;
-				// }
-				// _root = NULL;
 			}
 
 			/* ************************************************************************** */
@@ -358,18 +373,11 @@ namespace ft
 			// 	std::cout << std::endl;
 			// 	for (int i = 5; i < space; i++)
 			// 		std::cout << " ";
-			// 	std::cout << r->value << "\n"; 
+			// 	std::cout << r->value.first << "\n"; 
 			// 	print(r->l_child, space); 
 			// }
 
-		public :
-
-			node_pointer						_root;
-			node_pointer						_end;	// _root's parent node
-			node_allocator						_alloc;
-			key_compare							_comp;
-			size_type							_size;
-			size_type							_max_size;
+		private :
 
 			/* ************************************************************************** */
 			/*                   UNDERLAYING AVL TREE INTERNAL FUNCTIONS                  */
@@ -452,23 +460,42 @@ namespace ft
 					}
 				}
 				node_pointer n = new_node(v, parent);
+				
 				if (parent == NULL)			// Now linking new node to parent 
-				{
 					_root = n;
-					_end = _alloc.allocate(1);
-					_alloc.construct(_end, node_type());
-				}	
 				else if (value_comp()(v, parent->value))
 					parent->l_child = n;
 				else
 					parent->r_child = n;
-				balance(findValue(v));
 				++_size;
+					
+				balance(findValue(v));
 				return (1);
+			}
+
+			void	replaceValue(node_pointer n, const value_type & v) // since key is const the only way to replace a node's value is to replace the whole node + connections
+			{
+				node_pointer nbis = new_node(v, n->parent);
+
+				nbis->l_child = n->l_child;
+				nbis->r_child = n->r_child;
+				if (n->parent->l_child == n)
+					n->parent->l_child = nbis;
+				if (n->parent->r_child == n)
+					n->parent->r_child = nbis;
+				if (n->l_child)
+					n->l_child->parent = nbis;
+				if (n->r_child)
+					n->r_child->parent = nbis;
+				if (n == _root)
+					_root = nbis;
+				_alloc.destroy(n);
+				_alloc.deallocate(n, 1);
 			}
 
 			bool	remove(const value_type & v)
 			{
+
 				node_pointer n = findValue(v);
 				if (n == NULL)
 					return (0);
@@ -476,26 +503,23 @@ namespace ft
 				node_pointer substitute = maximum(n->l_child);		// checking left subtree for next smallest value bigger than n->value
 				if (substitute == NULL) 							// if we didn't find the substitute ( = no left subtree)
 				{
-					if (n == _root)									// if n is _root, its right subtree will replace it
+					if (n == _root)
+					{												// if n is _root, its right subtree will replace it
 						_root = n->r_child;
+						updateEnd();
+					}
 					else if (n->parent->l_child == n)				// if next smallest value bigger than n->value is n->parent 
 						n->parent->l_child = n->r_child;			// we know there is no left subtree so we can replace n->parent->l_child (= n) by n->r_child subtree
 					else
 						n->parent->r_child = n->r_child;			// if next smallest value bigger than n->value is n->r_child, let's replace n by its right subtree 
 					if (n->r_child != NULL)
-						n->r_child->parent = n->parent;			// now setting r_child->parent pointer 
+						n->r_child->parent = n->parent;				// now setting r_child->parent pointer 
 					_alloc.destroy(n);
-					_alloc.deallocate(n, 1);	
+					_alloc.deallocate(n, 1);
 				}
 				else												// if we found the subtitute ( = left subtree exists)
 				{
-					node_pointer tmp = new_node(substitute->value, n->parent);
-					tmp->l_child = n->l_child;
-					tmp->r_child = n->r_child;
-					_alloc.destroy(n);
-					_alloc.deallocate(n, 1);
-					n = tmp;
-					// n->value = substitute->value;								// we replace n->value by the new value
+					replaceValue(n, substitute->value); // we replace n->value by the new value
 					if (substitute->parent->l_child == substitute)				// if n->l_child has no right subtree
 						substitute->parent->l_child = substitute->l_child;
 					else
@@ -505,14 +529,16 @@ namespace ft
 					_alloc.destroy(substitute);
 					_alloc.deallocate(substitute, 1);
 				}
-				balance(parent);
 				--_size;
-				if (_size == 0 && _end)
+				if (_size == 0)
 				{
 					_alloc.destroy(_end);
 					_alloc.deallocate(_end, 1);
 					_end = NULL;
+					_root = NULL;
+					parent = NULL;
 				}
+				balance(parent);
 				return (1);
 			}
 
@@ -527,10 +553,10 @@ namespace ft
 					--_size;
 					if (node == _root)
 					{
-						_root = NULL;
 						_alloc.destroy(_end);
 						_alloc.deallocate(_end, 1);
 						_end = NULL;
+						_root = NULL;
 					}
 				}
 			}
