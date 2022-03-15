@@ -204,7 +204,25 @@ namespace ft
 
 			iterator	insert(iterator position, const value_type& val)
 			{
-				(void)position;
+				if (position != end())
+				{
+					iterator next = position;
+					++next;
+					if (position->first < val.first && (next == end() || next->first > val.first)) // if our hint is correct and the value to be inserted is between position and next
+					{
+						if (position.base()->parent == next.base() || next == end()) // if next is the parent node of position
+						{
+							node_pointer n = position.base();
+							n->r_child = new_node(val, n);
+						}
+						else
+						{
+							node_pointer n = next.base();
+							n->l_child = new_node(val, n);
+						}
+						return (--next);
+					}
+				}
 				return (insert(val).first);
 			}
 

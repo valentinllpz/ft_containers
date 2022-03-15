@@ -211,14 +211,42 @@ namespace ft
 			template <class InputIterator>
   			void	assign(InputIterator first, InputIterator last, typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type* = 0)
 			{
-				erase(begin(), end());
-				insert(begin(), first, last);
+				size_type n = 0;
+				size_type i = 0;
+
+				for (InputIterator it = first; it != last; it++)
+					n++;
+				for (size_type i = 0; i < _size; i++)
+					_alloc.destroy(&_array[i]);
+				if (n > _capacity)
+				{
+					_alloc.deallocate(_array, _capacity);
+					_array = _alloc.allocate(n);
+					_capacity = n;
+				}
+				for (InputIterator it = first; it != last; it++)
+				{
+					_alloc.construct(&_array[i], *it);
+					i++;
+				}
+				_size = n;
+				return ;
 			}
 
 			void	assign(size_type n, const value_type& val)
 			{
-				erase(begin(), end());
-				insert(begin(), n, val);
+				for (size_type i = 0; i < _size; i++)
+					_alloc.destroy(&_array[i]);
+				if (n > _capacity)
+				{
+					_alloc.deallocate(_array, _capacity);
+					_array = _alloc.allocate(n);
+					_capacity = n;
+				}
+				for (size_type i = 0; i < n; i++)
+					_alloc.construct(&_array[i], val);
+				_size = n;
+				return ;
 			}
 
 			void	push_back(const value_type &val)
@@ -251,7 +279,7 @@ namespace ft
 			void	insert(iterator position, size_type n, const value_type& val)
 			{
 				size_type	pos_index = 0;
-			
+						
 				for (iterator it = begin(); it != position; it++)
 					pos_index++;
 				if (_size + n > _capacity)
@@ -261,14 +289,28 @@ namespace ft
 					else
 						reserve(_size + n);
 				}
+				// std::cout << "size = " << _size << " | capacity = " << _capacity << " | n = " << n << " | pos_index = " << pos_index<< std::endl;
+				// for (ft::vector<int>::iterator it = begin(); it != end(); it++)
+				// 	std::cout << "[" << *it << "] ";
+				// std::cout << std::endl;
 				for (size_type i = _size + n - 1; i > pos_index; i--)
 				{
+					// std::cout << "i = " << i << std::endl;
 					_alloc.construct(&_array[i], _array[i - n]);
 					_alloc.destroy(&_array[i - n]);
+					for (size_type j = 0; j < _capacity; j++)
+						std::cout << "[" << _array[j] << "] ";
+					std::cout << std::endl;
+					if (i <= n) 
+						break ;
 				}
+				
 				for (size_type i = pos_index; i < pos_index + n; i++)
 					_alloc.construct(&_array[i], val);
 				_size += n;
+				// std::cout << "FINAL RESULT = " << std::endl;
+				// for (ft::vector<int>::iterator it = begin(); it != end(); it++)
+				// 	std::cout << "[" << *it << "] ";
 			}
 
 			template <class InputIterator>
@@ -289,10 +331,14 @@ namespace ft
 					else
 						reserve(_size + n);
 				}
+				// std::cout << "size = " << _size << " | capacity = " << _capacity << " | n = " << n << " | pos_index = " << pos_index<< std::endl;
 				for (size_type i = _size + n - 1; i > pos_index; i--)
 				{
+					// std::cout << "i = " << i << std::endl;
 					_alloc.construct(&_array[i], _array[i - n]);
 					_alloc.destroy(&_array[i - n]);
+					if (i <= n) 
+						break ;
 				}
 				it = first;
 				for (size_type i = pos_index; i < pos_index + n; i++)
