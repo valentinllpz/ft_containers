@@ -22,7 +22,7 @@ namespace ft
 	template < class Key,                                  		// map::key_type
 			class T,                                       		// map::mapped_type
 			class Compare = std::less<Key>,               		// map::key_compare
-			class Alloc = std::allocator<pair<const Key,T> >    // map::allocator_type
+			class Alloc = std::allocator<ft::pair<const Key,T> >    // map::allocator_type
 			>
 	class map
 	{
@@ -418,19 +418,7 @@ namespace ft
 				return (n);
 			}
 
-			node_pointer	findValue(const value_type & v) const
-			{
-				node_pointer	n = _root;
-
-				while (n && n->value != v)
-				{
-					if (value_comp()(v, n->value))
-						n = n->l_child;
-					else
-						n = n->r_child;
-				}
-				return (n);
-			}
+			node_pointer	findValue(const value_type & v) const { return (findKey(v.first)); }
 
 			void	updateEnd()
 			{
