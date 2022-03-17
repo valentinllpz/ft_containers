@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   map.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: valentin <valentin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: vlugand- <vlugand-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/21 19:06:34 by vlugand-          #+#    #+#             */
-/*   Updated: 2022/03/13 17:43:04 by valentin         ###   ########.fr       */
+/*   Updated: 2022/03/17 23:18:35 by vlugand-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,21 @@
 
 namespace ft
 {
+	template <class T>
+	class Node
+	{
+		public :
+
+			T 		value;
+			Node	*parent;
+			Node	*l_child;
+			Node	*r_child;
+
+			Node() : parent(NULL), l_child(NULL), r_child(NULL) {}
+			Node(const T & v, Node<T> *n) : value(v), parent(n), l_child(NULL), r_child(NULL) {}
+			~Node() {}
+	};
+
 	template < class Key,                                  		// map::key_type
 			class T,                                       		// map::mapped_type
 			class Compare = std::less<Key>,               		// map::key_compare
@@ -98,14 +113,12 @@ namespace ft
 			/*                     			CONSTRUCTORS                                  */
 			/* ************************************************************************** */
 
-			// Empty container constructor (default constructor): Constructs an empty container, with no elements ( = a map of size 0)
 			explicit map(const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) : _root(NULL), _alloc(alloc), _comp(comp), _size(0)
 			{
 				_end = _alloc.allocate(1);
 				_alloc.construct(_end, node_type());
 			}
 			
-			// Range constructor: Constructs a container with as many elements as the range [first,last), with each element constructed from its corresponding element in that range, in the same order.
 			template <class InputIterator>
 			map(typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type first, InputIterator last, const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) : _root(NULL), _alloc(alloc), _comp(comp), _size(0)
 			{
@@ -114,12 +127,11 @@ namespace ft
 				insert(first, last);
 			}
 
-			// Copy constructor: Constructs a container with a copy of each of the elements in x.
 			map(const map & x) : _root(NULL), _alloc(x._alloc), _comp(x._comp), _size(0)
 			{
 				_end = _alloc.allocate(1);
 				_alloc.construct(_end, node_type());
-				insert(x.begin(), x.end());
+				insert(x.begin(), x.end());			
 			}
 
 			~map() { clear(); }
@@ -208,9 +220,9 @@ namespace ft
 				{
 					iterator next = position;
 					++next;
-					if (position->first < val.first && (next == end() || next->first > val.first)) // if our hint is correct and the value to be inserted is between position and next
+					if (position->first < val.first && (next == end() || next->first > val.first))
 					{
-						if (position.base()->parent == next.base() || next == end()) // if next is the parent node of position
+						if (position.base()->parent == next.base() || next == end())
 						{
 							node_pointer n = position.base();
 							n->r_child = new_node(val, n);
@@ -381,8 +393,8 @@ namespace ft
 
 			allocator_type		get_allocator() const { return (allocator_type()); }
 
-			// DEBUG
-			// void		print(node_pointer r, int space)
+			// DEBUG -----------------------------------
+			// void		print(node_pointer r, int space)		// call with r = _root and space = 5
 			// {
 			// 	if (r == NULL)
 			// 		return ;
@@ -394,6 +406,7 @@ namespace ft
 			// 	std::cout << r->value.first << "\n"; 
 			// 	print(r->l_child, space); 
 			// }
+			// -----------------------------------------
 
 		private :
 
@@ -474,8 +487,8 @@ namespace ft
 				else
 					parent->r_child = n;
 				++_size;
-					
-				balance(findValue(v));
+				// balance(n);
+				updateEnd();
 				return (1);
 			}
 
@@ -544,7 +557,8 @@ namespace ft
 					_root = NULL;
 					parent = NULL;
 				}
-				balance(parent);
+				// balance(parent);
+				updateEnd();
 				return (1);
 			}
 
@@ -589,7 +603,6 @@ namespace ft
 					rightRotate(tree);
 				}
 				balance(tree->parent);
-				updateEnd();
 			}
 
 			int		depth(node_pointer tree) const

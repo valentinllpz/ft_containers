@@ -6,7 +6,7 @@
 /*   By: vlugand- <vlugand-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 13:16:39 by vlugand-          #+#    #+#             */
-/*   Updated: 2022/03/10 22:48:20 by vlugand-         ###   ########.fr       */
+/*   Updated: 2022/03/17 19:49:42 by vlugand-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,10 +47,8 @@ namespace ft
 			/*                     			CONSTRUCTORS                                  */
 			/* ************************************************************************** */
 
-			// Empty container constructor (default constructor): Constructs an empty container, with no elements ( = a vector of size 0)
 			explicit vector(const allocator_type& alloc = allocator_type()) : _array(NULL), _alloc(alloc), _size(0), _capacity(0), _max_size(alloc.max_size()) {}
 
-			// Fill constructor: Constructs a container with n elements. Each element is a copy of val.
 			explicit vector(size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()) : _alloc(alloc), _size(n), _capacity(n), _max_size(alloc.max_size())
 			{
 				_array = _alloc.allocate(n);
@@ -58,7 +56,6 @@ namespace ft
 					_alloc.construct(&_array[i], val);
 			};
 
-			// Range constructor: Constructs a container with as many elements as the range [first,last), with each element constructed from its corresponding element in that range, in the same order.
 			template <class InputIterator>
 			vector(InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type(), typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type* = 0) : _alloc(alloc),  _size(0), _capacity(0), _max_size(alloc.max_size())
 			{
@@ -77,7 +74,6 @@ namespace ft
 				}
 			}
 
-			// Copy constructor: Constructs a container with a copy of each of the elements in x, in the same order.
 			vector(const vector& x) : _alloc(x._alloc), _size(x._size), _capacity(x._capacity), _max_size(x.max_size())
 			{
 				_array = _alloc.allocate(_capacity);
@@ -289,28 +285,14 @@ namespace ft
 					else
 						reserve(_size + n);
 				}
-				// std::cout << "size = " << _size << " | capacity = " << _capacity << " | n = " << n << " | pos_index = " << pos_index<< std::endl;
-				// for (ft::vector<int>::iterator it = begin(); it != end(); it++)
-				// 	std::cout << "[" << *it << "] ";
-				// std::cout << std::endl;
-				for (size_type i = _size + n - 1; i > pos_index; i--)
+				for (size_type i = _size + n - 1; (i > pos_index && i >= n); i--)
 				{
-					// std::cout << "i = " << i << std::endl;
 					_alloc.construct(&_array[i], _array[i - n]);
 					_alloc.destroy(&_array[i - n]);
-					for (size_type j = 0; j < _capacity; j++)
-						std::cout << "[" << _array[j] << "] ";
-					std::cout << std::endl;
-					if (i <= n) 
-						break ;
 				}
-				
 				for (size_type i = pos_index; i < pos_index + n; i++)
 					_alloc.construct(&_array[i], val);
 				_size += n;
-				// std::cout << "FINAL RESULT = " << std::endl;
-				// for (ft::vector<int>::iterator it = begin(); it != end(); it++)
-				// 	std::cout << "[" << *it << "] ";
 			}
 
 			template <class InputIterator>
@@ -331,14 +313,10 @@ namespace ft
 					else
 						reserve(_size + n);
 				}
-				// std::cout << "size = " << _size << " | capacity = " << _capacity << " | n = " << n << " | pos_index = " << pos_index<< std::endl;
-				for (size_type i = _size + n - 1; i > pos_index; i--)
+				for (size_type i = _size + n - 1; (i > pos_index && i >= n); i--)
 				{
-					// std::cout << "i = " << i << std::endl;
 					_alloc.construct(&_array[i], _array[i - n]);
 					_alloc.destroy(&_array[i - n]);
-					if (i <= n) 
-						break ;
 				}
 				it = first;
 				for (size_type i = pos_index; i < pos_index + n; i++)
@@ -366,11 +344,13 @@ namespace ft
 				for (size_type i = first_index, j = 0; i < _size; i++, j++)
 				{
 					_alloc.destroy(&_array[i]);
-					_alloc.construct(&_array[i], _array[last_index + j]);
+					if (last != end())
+						_alloc.construct(&_array[i], _array[last_index + j]);
 				}
 				for (size_type i = first_index + last_to_end; i < _size; i++)
 					_alloc.destroy(&_array[i]);
 				_size -= last_index - first_index;
+				
 				return (first);
 			}
 

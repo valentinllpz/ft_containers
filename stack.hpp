@@ -6,7 +6,7 @@
 /*   By: vlugand- <vlugand-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/17 14:10:43 by valentin          #+#    #+#             */
-/*   Updated: 2022/03/10 18:35:23 by vlugand-         ###   ########.fr       */
+/*   Updated: 2022/03/17 20:15:52 by vlugand-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ namespace ft
 		/*                     		       VARIABLE                                   */
 		/* ************************************************************************** */
 
-			container_type				_container;
+			container_type				c;
 		
 		public : 
 
@@ -46,38 +46,38 @@ namespace ft
 		/*                     		   MEMBER FUNCTIONS                               */
 		/* ************************************************************************** */
 
-			explicit	stack(const container_type& ctnr = container_type()) : _container(ctnr) {}
+			explicit	stack(const container_type& ctnr = container_type()) : c(ctnr) {}
 
 			~stack() {}
 
-			bool 				empty() const { return (_container.empty()); }
+			bool 				empty() const { return (c.empty()); }
 
-			size_type 			size() const { return (_container.size()); }
+			size_type 			size() const { return (c.size()); }
 
-			value_type& 		top() { return (_container.back()); }
+			value_type& 		top() { return (c.back()); }
 
-			const value_type&	top() const { return (_container.back()); }
+			const value_type&	top() const { return (c.back()); }
 
-			void 				push(const value_type& val) { _container.push_back(val); }
+			void 				push(const value_type& val) { c.push_back(val); }
 
-			void				pop() { _container.pop_back(); }
+			void				pop() { c.pop_back(); }
 
 		/* ************************************************************************** */
 		/*                       NON MEMBER FUNCTIONS OVERLOADS                       */
 		/* ************************************************************************** */	
 
-			// relational operators (here we have to use friend because our _container variable is protected)
-			friend bool operator==( const stack<T,Container>& lhs, const stack<T,Container>& rhs ){ return (lhs._container == rhs._container); }
+			// relational operators (here we have to use friend because our c variable is protected)
+			friend bool operator==( const stack<T,Container>& lhs, const stack<T,Container>& rhs ){ return (lhs.c == rhs.c); }
 
-			friend bool operator!=( const stack<T,Container>& lhs, const stack<T,Container>& rhs ){ return (lhs._container != rhs._container); }
+			friend bool operator!=( const stack<T,Container>& lhs, const stack<T,Container>& rhs ){ return (lhs.c != rhs.c); }
 
-			friend bool operator<( const stack<T,Container>& lhs, const stack<T,Container>& rhs ){ return (lhs._container < rhs._container); }
+			friend bool operator<( const stack<T,Container>& lhs, const stack<T,Container>& rhs ){ return (lhs.c < rhs.c); }
 
-			friend bool operator<=( const stack<T,Container>& lhs, const stack<T,Container>& rhs ){ return (lhs._container <= rhs._container); }
+			friend bool operator<=( const stack<T,Container>& lhs, const stack<T,Container>& rhs ){ return (lhs.c <= rhs.c); }
 
-			friend bool operator>( const stack<T,Container>& lhs, const stack<T,Container>& rhs ){ return (lhs._container > rhs._container); }
+			friend bool operator>( const stack<T,Container>& lhs, const stack<T,Container>& rhs ){ return (lhs.c > rhs.c); }
 			
-			friend bool operator>=( const stack<T,Container>& lhs, const stack<T,Container>& rhs ){ return (lhs._container >= rhs._container); }
+			friend bool operator>=( const stack<T,Container>& lhs, const stack<T,Container>& rhs ){ return (lhs.c >= rhs.c); }
 
 	};
 }
