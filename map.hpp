@@ -6,7 +6,7 @@
 /*   By: vlugand- <vlugand-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/21 19:06:34 by vlugand-          #+#    #+#             */
-/*   Updated: 2022/03/17 23:18:35 by vlugand-         ###   ########.fr       */
+/*   Updated: 2022/03/18 00:05:41 by vlugand-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -487,7 +487,7 @@ namespace ft
 				else
 					parent->r_child = n;
 				++_size;
-				// balance(n);
+				balance(n);
 				updateEnd();
 				return (1);
 			}
@@ -557,7 +557,7 @@ namespace ft
 					_root = NULL;
 					parent = NULL;
 				}
-				// balance(parent);
+				balance(parent);
 				updateEnd();
 				return (1);
 			}
@@ -582,6 +582,8 @@ namespace ft
 			}
 
 			// AVL tree balancing related function (see https://cours.etsmtl.ca/SEG/FHenri/inf145/Suppl%C3%A9ments/arbres%20AVL.htm)
+			// *** Note that using an AVL will reduce speed at both insertion and removal, but it will find elements quicker ***
+			// *** Map is implemented using a Red Black Tree, which is way more efficient - if I had to redo the project I would go for this option instead ***
 
 			void	balance(node_pointer tree)
 			{

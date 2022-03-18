@@ -1,77 +1,68 @@
-#include "map.hpp"
-// #include <string>
-// #include <map>
-// #include <iostream>
-
-// int main ()
-// {
-// 	ft::map<int, std::string> mymap;
-// 	mymap.insert(ft::pair<int, std::string>(2, "lol"));
-// 	mymap.insert(ft::pair<int, std::string>(1, "mdr"));
-// 	mymap.insert(ft::pair<int, std::string>(3, "fuuf"));
-// 				mymap.erase(mymap.begin());
-// 	for (ft::map<int,std::string>::iterator it=mymap.begin(); it!=mymap.end(); it++)
-//     {
-// 		std::cout << it->first << " => " << it->second << '\n';
-// 	}
-	
-// 	return (0);
-// }
-
 #include <iostream>
-#include <map>
+#include <ctime>
+#include <cstdlib>
 
-void testing_equal()
+#ifdef STL
+	#include <map>
+	namespace ft = std;
+else
+	#include "map.hpp"
+
+#define	MAX_SIZE 2048
+#define SEED 42
+
+void	testing_assign(ft::map<int,int> &m)
 {
+	std::srand(SEED);
 
-  std::map<char,int> first;
-  std::map<char,int> second;
-
-  first['x']=8;
-  first['y']=16;
-  first['z']=32;
-
-  second=first;                // second now contains 3 ints
-  std::cout << "Size of first: " << first.size() << '\n';
-  std::cout << "Size of second: " << second.size() << '\n';
-
-  first=std::map<char,int>();  // and first is now empty
-
-  std::cout << "Size of first: " << first.size() << '\n';
-  std::cout << "Size of second: " << second.size() << '\n';
-
-
+	std::cout << "\n********* testing_assign *********\n" << std::endl;
+	for (int i = 0; i < MAX_SIZE; i++)
+		m[rand() % RAND_MAX] = rand() % RAND_MAX;
+	std::cout << "m.size() = " << m.size() << std::endl;
+	for (ft::map<int,int>::iterator it = m.begin(); it != m.end(); it++)
+		std::cout << "m [" << it->first << "] [" << it->second << "]" << std::endl;
+	std::cout << "\n************** END **************\n" << std::endl;
 }
 
-// void	ftlol()
-// {
-// 	ft::map<int,char> m;
+void	testing_empty(ft::map<int,int> &m)
+{
+	ft::map<int,int> foo;
 
-// 	m[1] = 'a';
-// 	m[4] = 'd';
-// 	m[3] = 'c';
-// 	m[2] = 'b';
+	std::cout << "\n********* testing_empty *********\n" << std::endl;
+	std::cout << "After calling map empty constructor:"<< std::endl;
+	if (foo.empty())
+		std::cout << "foo is empty" << std::endl;
+	else
+		std::cout << "foo is not empty" << std::endl;
+	foo = m;
+	std::cout << "After foo = m:"<< std::endl;
+	if (foo.empty())
+		std::cout << "foo is empty" << std::endl;
+	else
+		std::cout << "foo is not empty" << std::endl;
+	std::cout << "\n************** END **************\n" << std::endl;
+}
 
-// 	// m.clear();
-// 	for(ft::map<int,char>::iterator it = m.begin(); it != m.end(); it++)
-// 		std::cout << it->first << " " << it->second << std::endl;
+void	testing_size(ft::map<int,int> &m)
+{
+	ft::map<int,int> foo;
 
-// }
+	std::cout << "\n********* testing_size *********\n" << std::endl;
+	std::cout << "After calling map empty constructor:"<< std::endl;
+	std::cout << "foo.size() = " << foo.size() << std::endl;
+	foo = m;
+	std::cout << "After foo = m: "<< std::endl;
+	std::cout << "foo.size() = " << foo.size() << std::endl;
+	std::cout << "\n************** END **************\n" << std::endl;
+}
 
 int main ()
 {
 
+	ft::map<int,int> m1;
+	// first thing to test: modifiers with basic constructors
+	
 
-//   itlow=mymap.lower_bound (3);  // itlow points to b
-//   itup=mymap.upper_bound (3);   // itup points to e (not d!)
 
-// 	std::cout << itlow->first << " | " << itup->first << std::endl;
-//   mymap.erase(itlow,itup);        // erases [itlow,itup)
-
-//   // print content:
-//   for (ft::map<int,int>::iterator it=mymap.begin(); it!=mymap.end(); ++it)
-//     std::cout << it->first << " => " << it->second << '\n';
-	testing_equal();
-	// while (1) {}
-  return 0;
+	return (0);
 }
