@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   map.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vlugand- <vlugand-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: valentin <valentin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/21 19:06:34 by vlugand-          #+#    #+#             */
-/*   Updated: 2022/03/18 00:05:41 by vlugand-         ###   ########.fr       */
+/*   Updated: 2022/03/22 20:39:05 by valentin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -216,25 +216,26 @@ namespace ft
 
 			iterator	insert(iterator position, const value_type& val)
 			{
-				if (position != end())
-				{
-					iterator next = position;
-					++next;
-					if (position->first < val.first && (next == end() || next->first > val.first))
-					{
-						if (position.base()->parent == next.base() || next == end())
-						{
-							node_pointer n = position.base();
-							n->r_child = new_node(val, n);
-						}
-						else
-						{
-							node_pointer n = next.base();
-							n->l_child = new_node(val, n);
-						}
-						return (--next);
-					}
-				}
+				// if (position != end())
+				// {
+				// 	iterator next = position;
+				// 	++next;
+				// 	if (position->first < val.first && (next == end() || next->first > val.first))
+				// 	{
+				// 		if (position.base()->parent == next.base() || next == end())
+				// 		{
+				// 			node_pointer n = position.base();
+				// 			n->r_child = new_node(val, n);
+				// 		}
+				// 		else
+				// 		{
+				// 			node_pointer n = next.base();
+				// 			n->l_child = new_node(val, n);
+				// 		}
+				// 		return (--next);
+				// 	}
+				// }
+				(void)position;
 				return (insert(val).first);
 			}
 
@@ -453,6 +454,11 @@ namespace ft
 
 			void	updateEnd()
 			{
+				if (!_end)
+				{
+					_end = _alloc.allocate(1);
+					_alloc.construct(_end, node_type());
+				}
 				if (_root)
 				{
 					_end->l_child = _root;
