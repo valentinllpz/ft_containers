@@ -9,7 +9,7 @@
 	#include "map.hpp"
 #endif
 
-#define	MAX_SIZE 2048
+#define	MAX_SIZE 20048
 #define SEED 42
 
 void	print_details(ft::map<int,int> &m)
@@ -91,9 +91,9 @@ void	testing_insert()
 	for (int i = 0; i < MAX_SIZE; i++)
 		it = m.insert(it, ft::make_pair(rand() % RAND_MAX, rand() % RAND_MAX));
 	print_details(m);
-	// std::cout << "(3) range:" << std::endl;
-	// mbis.insert(m.begin(), m.end());
-	// print_details(mbis);
+	std::cout << "(3) range:" << std::endl;
+	mbis.insert(m.begin(), m.end());
+	print_details(mbis);
 	std::cout << "\n************** END **************\n" << std::endl;
 }
 

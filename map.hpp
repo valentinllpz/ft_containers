@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   map.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: valentin <valentin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: vlugand- <vlugand-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/21 19:06:34 by vlugand-          #+#    #+#             */
-/*   Updated: 2022/03/22 20:39:05 by valentin         ###   ########.fr       */
+/*   Updated: 2022/03/24 00:10:44 by vlugand-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -209,32 +209,23 @@ namespace ft
 
 			ft::pair<iterator, bool>	insert(const value_type& val)
 			{
-				bool added = add(val);
+				bool added = addFrom(_root, val);
 				ft::pair<iterator, bool> ret = ft::make_pair(iterator(findValue(val)), added);
 				return (ret);
 			}
 
 			iterator	insert(iterator position, const value_type& val)
 			{
-				// if (position != end())
-				// {
-				// 	iterator next = position;
-				// 	++next;
-				// 	if (position->first < val.first && (next == end() || next->first > val.first))
-				// 	{
-				// 		if (position.base()->parent == next.base() || next == end())
-				// 		{
-				// 			node_pointer n = position.base();
-				// 			n->r_child = new_node(val, n);
-				// 		}
-				// 		else
-				// 		{
-				// 			node_pointer n = next.base();
-				// 			n->l_child = new_node(val, n);
-				// 		}
-				// 		return (--next);
-				// 	}
-				// }
+				if (position != end())
+				{
+					iterator next = position;
+					++next;
+					if (value_comp()(*position, val) && (next == end() || value_comp()(val, *next)))
+					{
+						addFrom(position.base(), val);
+						return (--next);
+					}
+				}
 				(void)position;
 				return (insert(val).first);
 			}
@@ -395,17 +386,19 @@ namespace ft
 			allocator_type		get_allocator() const { return (allocator_type()); }
 
 			// DEBUG -----------------------------------
-			// void		print(node_pointer r, int space)		// call with r = _root and space = 5
+			// void		printTree()	{ printFrom(_root, 5); }
+			
+			// void		printFrom(node_pointer r, int space)
 			// {
 			// 	if (r == NULL)
 			// 		return ;
 			// 	space += 5; 
-			// 	print(r->r_child, space);
+			// 	printFrom(r->r_child, space);
 			// 	std::cout << std::endl;
 			// 	for (int i = 5; i < space; i++)
 			// 		std::cout << " ";
 			// 	std::cout << r->value.first << "\n"; 
-			// 	print(r->l_child, space); 
+			// 	printFrom(r->l_child, space); 
 			// }
 			// -----------------------------------------
 
@@ -467,11 +460,10 @@ namespace ft
 				}
 			}
 
-			bool	add(const value_type & v)	// returns 1 if value was added, 0 if exists already
+			bool	addFrom(node_pointer parent, const value_type & v)	// returns 1 if value was added, 0 if exists already
 			{
-				if (findValue(v)) // If value already exists we cannot add it
+				if (parent != _root && findValue(v)) // If value already exists we cannot add it
 					return (0); 
-				node_pointer parent = _root;
 				if (parent)
 				{
 					while (1) // Finding which node will become parent of new value v
@@ -493,7 +485,7 @@ namespace ft
 				else
 					parent->r_child = n;
 				++_size;
-				balance(n);
+				// balance(n);
 				updateEnd();
 				return (1);
 			}
