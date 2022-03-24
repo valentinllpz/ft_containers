@@ -6,7 +6,7 @@
 /*   By: vlugand- <vlugand-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/21 19:06:34 by vlugand-          #+#    #+#             */
-/*   Updated: 2022/03/24 00:10:44 by vlugand-         ###   ########.fr       */
+/*   Updated: 2022/03/24 18:50:31 by vlugand-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -485,7 +485,7 @@ namespace ft
 				else
 					parent->r_child = n;
 				++_size;
-				// balance(n);
+				balance(n);
 				updateEnd();
 				return (1);
 			}

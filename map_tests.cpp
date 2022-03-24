@@ -9,7 +9,7 @@
 	#include "map.hpp"
 #endif
 
-#define	MAX_SIZE 20048
+#define	MAX_SIZE 2048
 #define SEED 42
 
 void	print_details(ft::map<int,int> &m)
@@ -66,7 +66,7 @@ void	testing_size(ft::map<int,int> &m)
 	std::cout << "\n************** END **************\n" << std::endl;
 }
 
-void	testing_insert()
+void	testing_erase()
 {
 	std::srand(SEED);
 	ft::map<int,int> m;
@@ -76,24 +76,48 @@ void	testing_insert()
 	ft::map<int, int>::iterator it;
 
 	std::cout << "\n********* testing_assign *********\n" << std::endl;
+	for (int i = 0; i < MAX_SIZE; i++)
+		m[rand() % RAND_MAX] = rand() % RAND_MAX;
+	std::cout << "(1) single element:" << std::endl;
+	it = m.begin();
+	for (int i = 0; i < rand() % MAX_SIZE; i++)
+		it++;
+	
+	print_details(mbis);
+	std::cout << "\n************** END **************\n" << std::endl;
+}
+
+void	testing_insert()
+{
+	std::srand(SEED);
+	ft::map<int,int> m1;
+	ft::map<int,int> m2;
+	ft::map<int,int> m3;
+	ft::pair<int, int> val;
+	ft::pair<ft::map<int, int>::iterator, bool> ret;
+	ft::map<int, int>::iterator it;
+
+	std::cout << "\n********* testing_assign *********\n" << std::endl;
 	std::cout << "(1) single element:" << std::endl;
 	for (int i = 0; i < MAX_SIZE; i++)
 	{
 		val = ft::make_pair(rand() % RAND_MAX, rand() % RAND_MAX);
-		ret = m.insert(val);
+		ret = m1.insert(val);
 		if (ret.second == false)
 			std::cout << "pair [" << val.first << "] [" << val.second << "] already exists" << std::endl;
 	}
-	print_details(m);
-	m.clear();
-	std::cout << "(2) with hint:" << std::endl;
-	it = m.begin();
+	print_details(m1);
+	std::cout << "(2) with key:" << std::endl;
+	it = m2.begin();
 	for (int i = 0; i < MAX_SIZE; i++)
-		it = m.insert(it, ft::make_pair(rand() % RAND_MAX, rand() % RAND_MAX));
-	print_details(m);
+		it = m2.insert(it, ft::make_pair(rand() % RAND_MAX, rand() % RAND_MAX));
+	print_details(m2);
 	std::cout << "(3) range:" << std::endl;
-	mbis.insert(m.begin(), m.end());
-	print_details(mbis);
+	m3.insert(m2.begin(), it);
+	print_details(m3);
+	std::cout << "\n-- 2nd test with reverse iterators --\n" << std::endl;
+	m1.insert(m3.rbegin(), m3.rend());
+	print_details(m1);
 	std::cout << "\n************** END **************\n" << std::endl;
 }
 
