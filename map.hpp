@@ -6,7 +6,7 @@
 /*   By: vlugand- <vlugand-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/21 19:06:34 by vlugand-          #+#    #+#             */
-/*   Updated: 2022/03/24 18:50:31 by vlugand-         ###   ########.fr       */
+/*   Updated: 2022/03/29 23:25:33 by vlugand-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,9 +170,19 @@ namespace ft
 
 			const_iterator		end() const	{ return const_iterator(_end); }
 		
-			reverse_iterator 		rbegin() { return reverse_iterator(end()--); }
+			reverse_iterator 		rbegin()
+			{
+				if (_size == 0)
+					return reverse_iterator(_end);
+				return reverse_iterator(end()--);
+			}
 
-			const_reverse_iterator 	rbegin() const { return const_reverse_iterator(end()--); }
+			const_reverse_iterator 	rbegin() const
+			{
+				if (_size == 0)
+					return const_reverse_iterator(_end);
+				return const_reverse_iterator(end()--);
+			}
 
 			reverse_iterator 		rend() { return reverse_iterator(begin()); }
 			
