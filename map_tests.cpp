@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   map_tests.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vlugand- <vlugand-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: valentin <valentin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/18 00:19:36 by vlugand-          #+#    #+#             */
-/*   Updated: 2022/03/29 23:52:29 by vlugand-         ###   ########.fr       */
+/*   Updated: 2022/04/07 20:13:41 by valentin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,14 +32,25 @@ void	print_details(ft::map<int,int> &m)
 	std::cout << "size = " << m.size() << std::endl; 
 }
 
-void	testing_assign()
+void	testing_access()
 {
 	std::srand(SEED);
 	ft::map<int,int> m;
+	ft::map<int, int>::iterator it;
+	int key_a, key_b;
 
 	std::cout << "\n********* testing_assign *********\n" << std::endl;
 	for (int i = 0; i < MAX_SIZE; i++)
 		m[rand() % RAND_MAX] = rand() % RAND_MAX;
+	print_details(m);
+	it = m.begin();
+	for (int i = 0; i < rand() % MAX_SIZE && it != m.end(); i++)
+		it++;
+	key_a = it->first;
+	for (int i = 0; i < rand() % MAX_SIZE && it != m.end(); i++)
+		it++;
+	key_b = it->first;
+	m[key_a] = m[key_b];
 	print_details(m);
 	std::cout << "\n************** END **************\n" << std::endl;
 }
@@ -62,19 +73,6 @@ void	testing_empty()
 		std::cout << "foo is empty" << std::endl;
 	else
 		std::cout << "foo is not empty" << std::endl;
-	std::cout << "\n************** END **************\n" << std::endl;
-}
-
-void	testing_size(ft::map<int,int> &m)
-{
-	ft::map<int,int> foo;
-
-	std::cout << "\n********* testing_size *********\n" << std::endl;
-	std::cout << "After calling map empty constructor:"<< std::endl;
-	std::cout << "foo.size() = " << foo.size() << std::endl;
-	foo = m;
-	std::cout << "After foo = m: "<< std::endl;
-	std::cout << "foo.size() = " << foo.size() << std::endl;
 	std::cout << "\n************** END **************\n" << std::endl;
 }
 
@@ -173,7 +171,7 @@ void	testing_insert()
 	ft::map<int,int> m3;
 	ft::pair<int, int> val;
 	ft::pair<ft::map<int, int>::iterator, bool> ret;
-	ft::map<int, int>::iterator it;
+	ft::map<int,int>::iterator it;
 
 	std::cout << "\n********* testing_insert() *********\n" << std::endl;
 	std::cout << "(1) single element:" << std::endl;
@@ -198,6 +196,83 @@ void	testing_insert()
 	std::cout << "\n************** END **************\n" << std::endl;
 }
 
+void	testing_keycomp()
+{
+	ft::map<char,int> m;
+	ft::map<char,int>::key_compare mycomp = m.key_comp();
+
+	std::cout << "\n********* testing_keycomp() *********\n" << std::endl;
+	m['a']= rand() % RAND_MAX;
+	m['b']= rand() % RAND_MAX;
+	m['c']= rand() % RAND_MAX;
+
+  	std::cout << "m contains:\n";
+
+	char highest = m.rbegin()->first;
+
+	ft::map<char,int>::iterator it = m.begin();
+	do {
+		std::cout << it->first << " => " << it->second << '\n';
+	} while ( mycomp((*it++).first, highest) );
+	std::cout << std::endl;
+	std::cout << "\n************** END **************\n" << std::endl;
+}
+
+void	testing_valuecomp()
+{
+	ft::map<char,int> m;
+
+	std::cout << "\n********* testing_valuecomp() *********\n" << std::endl;
+	m['x']= rand() % RAND_MAX;
+	m['y']= rand() % RAND_MAX;
+	m['z']= rand() % RAND_MAX;
+
+	std::cout << "m contains:\n";
+
+	ft::pair<char,int> highest = *m.rbegin();
+
+	ft::map<char,int>::iterator it = m.begin();
+	do {
+		std::cout << it->first << " => " << it->second << '\n';
+	} while ( m.value_comp()(*it++, highest) );
+	std::cout << "\n************** END **************\n" << std::endl;
+}
+
+void	testing_find()
+{
+	ft::map<int,int> m;
+	ft::map<int,int>::iterator it;
+
+	std::cout << "\n********* testing_find() *********\n" << std::endl;
+	for (int i = 0; i < MAX_SIZE; i++)
+		m.insert(ft::make_pair(rand() % MAX_SIZE, rand() % MAX_SIZE));
+	for (int i = 0; i < MAX_SIZE; i++)
+	{
+		if ((it = m.find(i)) != m.end())
+			m.erase(it);
+	}
+	print_details(m);
+	std::cout << "\n************** END **************\n" << std::endl;
+}
+
+void	testing_count()
+{
+	ft::map<int,int> m;
+
+	std::cout << "\n********* testing_count() *********\n" << std::endl;
+	for (int i = 0; i < MAX_SIZE; i++)
+		m.insert(ft::make_pair(rand() % MAX_SIZE, rand() % MAX_SIZE));
+	for (int i = 0; i < MAX_SIZE; i++)
+	{
+		std::cout << i;
+		if (m.count(i) > 0)
+      		std::cout << " is an element of mymap.\n";
+		else 
+     		std::cout << " is not an element of mymap." << std::endl;
+	}
+	std::cout << "\n************** END **************\n" << std::endl;
+}
+
 int main ()
 {
 
@@ -206,12 +281,21 @@ int main ()
 	
 	std::cout << ">>>>>>>>>>>>>>>> TESTING MAP <<<<<<<<<<<<<<<<<" << std::endl;
 	// from now on size(), iterator, reverse iterator and basic constructor are required
-	testing_insert(); // you need to use key comp and / or value comp as underlaying comparison tool
-	// from now on insert() is required
-	testing_erase();
-	testing_swap();
-	testing_clear();
 	
+
+	// testing_insert(); // you need to use key comp and / or value comp as underlaying comparison tool
+	// // from now on insert() is required
+	// testing_erase();
+	// testing_swap();
+	// testing_clear();
+	
+	// testing_empty();
+	// testing_access();
+
+	// testing_keycomp();
+	// testing_valuecomp();
+	testing_find();
+	// testing_count();
 
 	return (0);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   map.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vlugand- <vlugand-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: valentin <valentin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/21 19:06:34 by vlugand-          #+#    #+#             */
-/*   Updated: 2022/03/29 23:25:33 by vlugand-         ###   ########.fr       */
+/*   Updated: 2022/04/01 00:24:51 by valentin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -236,7 +236,6 @@ namespace ft
 						return (--next);
 					}
 				}
-				(void)position;
 				return (insert(val).first);
 			}
 
