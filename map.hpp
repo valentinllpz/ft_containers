@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   map.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: valentin <valentin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: vlugand- <vlugand-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/21 19:06:34 by vlugand-          #+#    #+#             */
-/*   Updated: 2022/04/01 00:24:51 by valentin         ###   ########.fr       */
+/*   Updated: 2022/04/07 22:51:07 by vlugand-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -471,7 +471,7 @@ namespace ft
 
 			bool	addFrom(node_pointer parent, const value_type & v)	// returns 1 if value was added, 0 if exists already
 			{
-				if (parent != _root && findValue(v)) // If value already exists we cannot add it
+				if (findValue(v)) // If value already exists we cannot add it
 					return (0); 
 				if (parent)
 				{

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   map_tests.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: valentin <valentin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: vlugand- <vlugand-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/18 00:19:36 by vlugand-          #+#    #+#             */
-/*   Updated: 2022/04/07 20:13:41 by valentin         ###   ########.fr       */
+/*   Updated: 2022/04/07 23:04:54 by vlugand-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -283,19 +283,19 @@ int main ()
 	// from now on size(), iterator, reverse iterator and basic constructor are required
 	
 
-	// testing_insert(); // you need to use key comp and / or value comp as underlaying comparison tool
+	testing_insert(); // you need to use key comp and / or value comp as underlaying comparison tool
 	// // from now on insert() is required
-	// testing_erase();
-	// testing_swap();
-	// testing_clear();
+	testing_erase();
+	testing_swap();
+	testing_clear();
 	
-	// testing_empty();
-	// testing_access();
+	testing_empty();
+	testing_access();
 
-	// testing_keycomp();
-	// testing_valuecomp();
+	testing_keycomp();
+	testing_valuecomp();
 	testing_find();
-	// testing_count();
+	testing_count();
 
 	return (0);
 }
