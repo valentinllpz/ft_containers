@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   map_tests.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vlugand- <vlugand-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: valentin <valentin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/18 00:19:36 by vlugand-          #+#    #+#             */
-/*   Updated: 2022/04/07 23:04:54 by vlugand-         ###   ########.fr       */
+/*   Updated: 2022/04/07 23:53:24 by valentin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -177,7 +177,7 @@ void	testing_insert()
 	std::cout << "(1) single element:" << std::endl;
 	for (int i = 0; i < MAX_SIZE; i++)
 	{
-		val = ft::make_pair(rand() % RAND_MAX, rand() % RAND_MAX);
+		val = ft::make_pair(rand() % MAX_SIZE, rand() % MAX_SIZE);
 		ret = m1.insert(val);
 		if (ret.second == false)
 			std::cout << "pair [" << val.first << "] [" << val.second << "] already exists" << std::endl;
@@ -273,6 +273,69 @@ void	testing_count()
 	std::cout << "\n************** END **************\n" << std::endl;
 }
 
+void	testing_bounds()
+{
+	ft::map<char,int> m;
+	ft::map<char,int>::iterator itlow,itup;
+
+	std::cout << "\n********* testing_bounds() *********\n" << std::endl;
+	m['a']= rand() % RAND_MAX;
+	m['b']= rand() % RAND_MAX;
+	m['c']= rand() % RAND_MAX;
+	m['d']= rand() % RAND_MAX;
+	m['e']= rand() % RAND_MAX;
+
+	itlow=m.lower_bound('b');  // itlow points to b
+	itup=m.upper_bound('d');   // itup points to e (not d!)
+
+	m.erase(itlow,itup);
+
+	for (ft::map<char,int>::reverse_iterator it=m.rbegin(); it!=m.rend(); ++it)
+		std::cout << it->first << " => " << it->second << '\n';
+	std::cout << "\n************** END **************\n" << std::endl;
+}
+
+void	testing_range()
+{
+	ft::map<char,int> m;
+	ft::map<char,int>::iterator itlow,itup;
+
+	std::cout << "\n********* testing_range() *********\n" << std::endl;
+	m['a']= rand() % RAND_MAX;
+	m['b']= rand() % RAND_MAX;
+	m['c']= rand() % RAND_MAX;
+
+	ft::pair<ft::map<char,int>::iterator,ft::map<char,int>::iterator> ret;
+
+	ret = m.equal_range('b');
+
+	std::cout << "lower bound points to: ";
+	std::cout << ret.first->first << " => " << ret.first->second << '\n';
+
+	std::cout << "upper bound points to: ";
+	std::cout << ret.second->first << " => " << ret.second->second << '\n';
+	std::cout << "\n************** END **************\n" << std::endl;
+}
+
+void	testing_getalloc()
+{
+	int psize;
+	ft::map<char,int> mymap;
+	ft::pair<const char,int>* p;
+	std::cout << "\n********* testing_getalloc() *********\n" << std::endl;
+
+	// allocate an array of 5 elements using mymap's allocator:
+	p=mymap.get_allocator().allocate(5);
+
+	// assign some values to array
+	psize = sizeof(ft::map<char,int>::value_type)*5;
+
+	std::cout << "The allocated array has a size of " << psize << " bytes.\n";
+
+	mymap.get_allocator().deallocate(p,5);
+	std::cout << "\n************** END **************\n" << std::endl;
+}
+
 int main ()
 {
 
@@ -281,10 +344,8 @@ int main ()
 	
 	std::cout << ">>>>>>>>>>>>>>>> TESTING MAP <<<<<<<<<<<<<<<<<" << std::endl;
 	// from now on size(), iterator, reverse iterator and basic constructor are required
-	
-
 	testing_insert(); // you need to use key comp and / or value comp as underlaying comparison tool
-	// // from now on insert() is required
+	// from now on insert() is required
 	testing_erase();
 	testing_swap();
 	testing_clear();
@@ -296,6 +357,11 @@ int main ()
 	testing_valuecomp();
 	testing_find();
 	testing_count();
+	testing_bounds();
+	testing_range();
+	testing_getalloc();
+
+	std::cout << ">>>>>>>>>>>>>>>> END MAP TESTS <<<<<<<<<<<<<<<<<" << std::endl;
 
 	return (0);
 }
