@@ -1,18 +1,45 @@
-#include "vector.hpp"
-// #include <vector>
-#include <iostream>
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   vector_tests.cpp                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: valentin <valentin@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/03/18 00:19:36 by vlugand-          #+#    #+#             */
+/*   Updated: 2022/04/07 23:53:24 by valentin         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-int main()
+#include <iostream>
+#include <ctime>
+#include <cstdlib>
+
+#ifdef STL
+	#include <vector>
+	namespace ft = std;
+#else
+	#include "vector.hpp"
+#endif
+
+#define	MAX_SIZE 2048 // INT VALUE ONLY
+#define SEED 42
+
+void	print_details(ft::vector<int> &v) // uses 
 {
-	ft::vector<int> v(7);
-	// std::vector<int> v2;
+
+}
+
+int main ()
+{
+
+	ft::vector<int> m; // just testing ints here
+	// first thing to test: modifiers with basic constructors // faire des try catch ?
 	
-	for (unsigned long int i = 0; i < v.size(); ++i)
-		v[i] = (v.size() - i) * 3;
-	
-	// for (ft::vector<int>::iterator it = v.begin(); it != v.end(); it++)
-	// 	std::cout << "[" << *it << "] ";
-	std::cout << std::endl;
-	v.insert(v.begin(), 2, 42);
-	return 0;
+	std::cout << ">>>>>>>>>>>>>>>> TESTING vector <<<<<<<<<<<<<<<<<" << std::endl;
+	// from now on size(), iterator, reverse iterator and basic constructor are required
+
+
+	std::cout << ">>>>>>>>>>>>>>>> END vector TESTS <<<<<<<<<<<<<<<<<" << std::endl;
+
+	return (0);
 }
