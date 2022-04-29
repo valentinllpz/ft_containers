@@ -6,7 +6,7 @@
 /*   By: valentin <valentin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/18 00:19:36 by vlugand-          #+#    #+#             */
-/*   Updated: 2022/04/07 23:53:24 by valentin         ###   ########.fr       */
+/*   Updated: 2022/04/25 00:36:21 by valentin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,19 +22,21 @@
 #endif
 
 #define	MAX_SIZE 2048 // INT VALUE ONLY
-#define SEED 42
 
 void	print_details(ft::map<int,int> &m)
 {
-	std::cout << "printing details: " << std::endl;
+	std::cout << "printing content: " << std::endl;
 	for (ft::map<int,int>::iterator it = m.begin(); it != m.end(); it++)
 		std::cout << "[" << it->first << "] [" << it->second << "]" << std::endl;
 	std::cout << "size = " << m.size() << std::endl; 
+	if (m.empty())
+		std::cout << "m is empty" << std::endl;
+	else
+		std::cout << "m is not empty" << std::endl;
 }
 
 void	testing_access()
 {
-	std::srand(SEED);
 	ft::map<int,int> m;
 	ft::map<int, int>::iterator it;
 	int key_a, key_b;
@@ -78,7 +80,6 @@ void	testing_empty()
 
 void	testing_clear()
 {
-	std::srand(SEED);
 	ft::map<int,int> m;
 	ft::map<int,int> mbis;
 	ft::map<int, int>::iterator it;
@@ -100,7 +101,6 @@ void	testing_clear()
 
 void	testing_swap()
 {
-	std::srand(SEED);
 	ft::map<int,int> m;
 	ft::map<int,int> mbis;
 
@@ -123,7 +123,6 @@ void	testing_swap()
 
 void	testing_erase()
 {
-	std::srand(SEED);
 	ft::map<int,int> m;
 	ft::map<int, int>::iterator it;
 	ft::map<int, int>::reverse_iterator rit;
@@ -165,7 +164,6 @@ void	testing_erase()
 
 void	testing_insert()
 {
-	std::srand(SEED);
 	ft::map<int,int> m1;
 	ft::map<int,int> m2;
 	ft::map<int,int> m3;
@@ -360,6 +358,8 @@ int main ()
 	testing_bounds();
 	testing_range();
 	testing_getalloc();
+
+	// forgot constructors
 
 	std::cout << ">>>>>>>>>>>>>>>> END MAP TESTS <<<<<<<<<<<<<<<<<" << std::endl;
 
