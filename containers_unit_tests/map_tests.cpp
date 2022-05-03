@@ -21,13 +21,14 @@
 	#include "../map.hpp"
 #endif
 
-#define	MAX_SIZE 5000 // INT VALUE ONLY
+#define	MAX_SIZE 10000 // INT VALUE ONLY
 #define SEED 42
 
 template <typename T, typename U>
 void	print_details(ft::map<T,U> &m)
 {
-	std::cout << "printing content: " << std::endl;
+	std::cout << "printing details: " << std::endl;
+	std::cout << "content: " << std::endl;
 	for (typename ft::map<T,U>::iterator it = m.begin(); it != m.end(); it++)
 		std::cout << "[" << it->first << "] [" << it->second << "]" << std::endl;
 	std::cout << "size = " << m.size() << std::endl; 
@@ -35,6 +36,7 @@ void	print_details(ft::map<T,U> &m)
 		std::cout << "m is empty" << std::endl;
 	else
 		std::cout << "m is not empty" << std::endl;
+	std::cout << "--------- details printed" << std::endl;
 }
 
 void	testing_access()

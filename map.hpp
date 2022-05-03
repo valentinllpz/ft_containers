@@ -494,7 +494,7 @@ namespace ft
 				else
 					parent->r_child = n;
 				++_size;
-				balance(n);
+				balance(parent);
 				updateEnd();
 				return (1);
 			}
@@ -525,7 +525,7 @@ namespace ft
 				node_pointer n = findValue(v);
 				if (n == NULL)
 					return (0);
-				node_pointer parent = n->parent;					// Backing up parent address
+				// node_pointer parent = n->parent;					// Backing up parent address
 				node_pointer substitute = maximum(n->l_child);		// checking left subtree for next smallest value bigger than n->value
 				if (substitute == NULL) 							// if we didn't find the substitute ( = no left subtree)
 				{
@@ -562,9 +562,9 @@ namespace ft
 					_alloc.deallocate(_end, 1);
 					_end = NULL;
 					_root = NULL;
-					parent = NULL;
+					// parent = NULL;
 				}
-				balance(parent);
+				// balance(parent);
 				updateEnd();
 				return (1);
 			}
@@ -618,7 +618,7 @@ namespace ft
 						leftRotate(tree->l_child);
 					rightRotate(tree);
 				}
-				balance(tree->parent);
+				// balance(tree->parent);   // uncomment for a perfectly balanced tree from the root (hinders performances on insert)
 			}
 
 			int		depth(node_pointer tree) const

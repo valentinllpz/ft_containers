@@ -35,7 +35,7 @@ void	print_details(ft::vector<T> &v) // uses size, max_size, capacity, empty and
 		std::cout << "v is not empty" << std::endl;
 	std::cout << "max size = " << v.max_size() << std::endl;
 	std::cout << "capacity = " << v.capacity() << std::endl;	
-	std::cout << "printing content: " << std::endl;
+	std::cout << "content: " << std::endl;
 	for (size_t i = 0; i < v.size(); i++)
 		std::cout << "v[" << i << "] = "<< v[i] << std::endl;
 	std::cout << "--------- details printed" << std::endl;
@@ -250,22 +250,19 @@ void	testing_constructors()
 
 int main ()
 {
-
-	ft::vector<int> m; // just testing ints here
-	// first thing to test: modifiers with basic constructors // faire des try catch ?
 	srand(SEED);
 
 	std::cout << ">>>>>>>>>>>>>>>> TESTING vector <<<<<<<<<<<<<<<<<" << std::endl;
 	// from now on size(), iterator, reverse iterator and basic constructor are required
 	// size, max_size, capacity, empty and []
-	// testing_assign();
-	// testing_push_pop_back();
+	testing_assign();
+	testing_push_pop_back();
 	testing_insert();
-	// testing_erase();
-	// testing_swap();
-	// testing_clear();
-	// testing_reserve();
-	// testing_at();
+	testing_erase();
+	testing_swap();
+	testing_clear();
+	testing_reserve();
+	testing_at();
 	std::cout << ">>>>>>>>>>>>>>>> END vector TESTS <<<<<<<<<<<<<<<<<" << std::endl;
 
 	return (0);

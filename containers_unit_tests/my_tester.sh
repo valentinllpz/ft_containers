@@ -21,7 +21,7 @@ function title {
     echo -e "${YELLOW}██      ██    ██ ████   ██    ██    ██   ██ ██ ████   ██ ██      ██   ██ ██     "
     echo -e "${RED}██      ██    ██ ██ ██  ██    ██    ███████ ██ ██ ██  ██ █████   ██████  ███████"
     echo -e "${MAGENTA}██      ██    ██ ██  ██ ██    ██    ██   ██ ██ ██  ██ ██ ██      ██   ██      ██"
-    echo -e "${CYAN} ██████  ██████  ██   ████    ██    ██   ██ ██ ██   ████ ███████ ██   ██ ███████${WHITE}  express ${NORMAL}"
+    echo -e "${CYAN} ██████  ██████  ██   ████    ██    ██   ██ ██ ██   ████ ███████ ██   ██ ███████${NORMAL}"
     echo ""
 }
 
@@ -46,12 +46,12 @@ function spinner {
 function testing_vector {
     printf "${BRIGHT}${POWDER_BLUE}\n/* ************************************************************************** */\n"
 	printf "/*                                  VECTOR                                    */\n"
-    printf "/* ************************************************************************** */\n\n${NORMAL}"
-    printf "\U1F4D8 Running tests with the STL... "
-    g++ -fsanitize=address -g3 -std=c++98 -Wall -Werror -Wextra -DSTL vector_tests.cpp && ./a.out > vector_stl_output.log & spinner
-    printf "\U1F530 Running tests with your vector... "
-    g++ -fsanitize=address -g3 -std=c++98 -Wall -Werror -Wextra vector_tests.cpp && ./a.out > vector_your_output.log & spinner
-    printf "\U1F440 Comparing both outputs...\n"
+    printf "/* ************************************************************************** */\n${NORMAL}"
+    printf "\n\U1F4D8 Running tests with the STL... "
+    time (g++ -fsanitize=address -g3 -std=c++98 -Wall -Werror -Wextra -DSTL vector_tests.cpp && ./a.out > vector_stl_output.log & spinner) 
+    printf "\n\U1F530 Running tests with your vector... "
+    time (g++ -fsanitize=address -g3 -std=c++98 -Wall -Werror -Wextra vector_tests.cpp && ./a.out > vector_your_output.log & spinner) 
+    printf "\n\U1F440 Comparing both outputs...\n"
     if diff vector_stl_output.log vector_your_output.log
     then
         printf "${BRIGHT}\n>>> VECTOR TESTS CLEAR \u2705\n"
@@ -63,15 +63,35 @@ function testing_vector {
     echo "${NORMAL}"
 }
 
+function testing_stack {
+    printf "${BRIGHT}${POWDER_BLUE}\n/* ************************************************************************** */\n"
+	printf "/*                                  STACK                                    */\n"
+    printf "/* ************************************************************************** */\n${NORMAL}"
+    printf "\n\U1F4D8 Running tests with the STL... "
+    time (g++ -fsanitize=address -g3 -std=c++98 -Wall -Werror -Wextra -DSTL stack_tests.cpp && ./a.out > stack_stl_output.log & spinner) 
+    printf "\n\U1F530 Running tests with your stack... "
+    time (g++ -fsanitize=address -g3 -std=c++98 -Wall -Werror -Wextra stack_tests.cpp && ./a.out > stack_your_output.log & spinner) 
+    printf "\n\U1F440 Comparing both outputs...\n"
+    if diff stack_stl_output.log stack_your_output.log
+    then
+        printf "${BRIGHT}\n>>> STACK TESTS CLEAR \u2705\n"
+        rm -rf stack*.log
+    else
+        printf "${BRIGHT}\n>>> STACK TESTS KO \u274C\n"
+        printf "Compare both log files for more details.\n"
+    fi
+    echo "${NORMAL}"
+}
+
 function testing_map {
     printf "${BRIGHT}${POWDER_BLUE}\n/* ************************************************************************** */\n"
 	printf "/*                                    MAP                                     */\n"
-    printf "/* ************************************************************************** */\n\n${NORMAL}"
-    printf "\U1F4D8 Running tests with the STL... "
-    g++ -fsanitize=address -g3 -std=c++98 -Wall -Werror -Wextra -DSTL map_tests.cpp && ./a.out > map_stl_output.log & spinner
-    printf "\U1F530 Running tests with your map... "
-    g++ -fsanitize=address -g3 -std=c++98 -Wall -Werror -Wextra map_tests.cpp && ./a.out > map_your_output.log & spinner
-    printf "\U1F440 Comparing both outputs...\n"
+    printf "/* ************************************************************************** */\n${NORMAL}"
+    printf "\n\U1F4D8 Running tests with the STL... "
+    time (g++ -fsanitize=address -g3 -std=c++98 -Wall -Werror -Wextra -DSTL map_tests.cpp && ./a.out > map_stl_output.log & spinner)
+    printf "\n\U1F530 Running tests with your map... "
+    time (g++ -fsanitize=address -g3 -std=c++98 -Wall -Werror -Wextra map_tests.cpp && ./a.out > map_your_output.log & spinner)
+    printf "\n\U1F440 Comparing both outputs...\n"
     if diff map_stl_output.log map_your_output.log
     then
         printf "${BRIGHT}\n>>> MAP TESTS CLEAR \u2705\n"
@@ -86,5 +106,6 @@ function testing_map {
 
 title
 testing_vector
+testing_stack
 testing_map
 rm a.out

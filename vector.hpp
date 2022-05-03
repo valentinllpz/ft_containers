@@ -278,13 +278,10 @@ namespace ft
 						
 				for (iterator it = begin(); it != position; it++)
 					pos_index++;
-				if (_size + n > _capacity)
-				{
-					if (_size + n < _capacity * 2)
-						reserve(_capacity * 2);
-					else
-						reserve(_size + n);
-				}
+				if (_size +  n > _capacity && _size * 2 > _size + n)
+					reserve(_size * 2);
+				else
+					reserve(_size + n);	
 				for (size_type i = _size + n - 1; (i > pos_index && i >= n); i--)
 				{
 					_alloc.construct(&_array[i], _array[i - n]);
@@ -306,13 +303,10 @@ namespace ft
 					n++;
 				for (iterator it = begin(); it != position; it++)
 					pos_index++;
-				if (_size + n > _capacity)
-				{
-					if (_size + n < _capacity * 2)
-						reserve(_capacity * 2);
-					else
-						reserve(_size + n);
-				}
+				if (_size +  n > _capacity && _size * 2 > _size + n)
+					reserve(_size * 2);
+				else
+					reserve(_size + n);
 				for (size_type i = _size + n - 1; (i > pos_index && i >= n); i--)
 				{
 					_alloc.construct(&_array[i], _array[i - n]);
@@ -344,9 +338,9 @@ namespace ft
 
 			iterator	erase(iterator first, iterator last)
 			{
-				std::ptrdiff_t	range = last - first;
+				difference_type	range = last - first;
 
-				for (std::ptrdiff_t i(0); i < range; i++)
+				for (difference_type i(0); i < range; i++)
 					erase(first);
 				return first;
 			}
