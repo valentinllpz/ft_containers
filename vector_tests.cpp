@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   vector_tests.cpp                                      :+:      :+:    :+:   */
+/*   vector_tests.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: valentin <valentin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: vlugand- <vlugand-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/18 00:19:36 by vlugand-          #+#    #+#             */
-/*   Updated: 2022/04/07 23:53:24 by valentin         ###   ########.fr       */
+/*   Updated: 2022/05/03 02:22:07 by vlugand-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,10 @@
 #endif
 
 #define	MAX_SIZE 2048 // INT VALUE ONLY
+#define SEED 42
 
-void	print_details(ft::vector<int> &v) // uses size, max_size, capacity, empty and []
+template <typename T>
+void	print_details(ft::vector<T> &v) // uses size, max_size, capacity, empty and []
 {
 	std::cout << "printing details: " << std::endl;
 	std::cout << "size = " << v.size() << std::endl;
@@ -36,19 +38,83 @@ void	print_details(ft::vector<int> &v) // uses size, max_size, capacity, empty a
 	std::cout << "printing content: " << std::endl;
 	for (size_t i = 0; i < v.size(); i++)
 		std::cout << "v[" << i << "] = "<< v[i] << std::endl;
+	std::cout << "--------- details printed" << std::endl;
+}
+
+void	testing_back()
+{
+	ft::vector<int> v;
+
+	std::cout << "\n********* testing_back *********\n" << std::endl;
+	v.push_back(10);
+	while (v.back() != 0)
+		v.push_back ( v.back() -1 );
+	std::cout << "v contains:";
+	for (unsigned i = 0; i < v.size() ; i++)
+		std::cout << ' ' << v[i] << std::endl;
+	std::cout << "\n************** END **************\n" << std::endl;
+}
+
+void	testing_front()
+{
+	ft::vector<int> v;
+
+	std::cout << "\n********* testing_front *********\n" << std::endl;
+	v.push_back(10);
+	while (v.front() != 0)
+		v.push_back ( v.front() -1 );
+	std::cout << "v contains:";
+	for (unsigned i = 0; i < v.size() ; i++)
+		std::cout << ' ' << v[i] << std::endl;
+	std::cout << "\n************** END **************\n" << std::endl;
+}
+
+void	testing_at()
+{
+	ft::vector<int> v(MAX_SIZE);
+
+	std::cout << "\n********* testing_at *********\n" << std::endl;
+	for (unsigned i = 0; i < v.size(); i++)
+		v.at(i)=i;
+	std::cout << "v contains:";
+	for (unsigned i = 0; i < v.size(); i++)
+		std::cout << ' ' << v.at(i) << std::endl;
+	std::cout << "\n************** END **************\n" << std::endl;
+}
+
+void	testing_reserve()
+{
+	ft::vector<int> v;
+	ft::vector<int>::size_type sz;
+
+	std::cout << "\n********* testing_reserve *********\n" << std::endl;
+	sz = v.capacity();
+	v.reserve(MAX_SIZE / 2);
+	for (int i = 0; i < MAX_SIZE; i++)
+	{
+		v.push_back(rand() % RAND_MAX);
+		if (sz != v.capacity()) 
+		{
+			sz = v.capacity();
+			std::cout << "capacity changed: " << sz << '\n';
+		}
+    }
+	std::cout << "\n************** END **************\n" << std::endl;
 }
 
 void	testing_clear()
 {
 	ft::vector<int> v;
 
-	std::cout << "\n********* testing_erase *********\n" << std::endl;
+	std::cout << "\n********* testing_clear *********\n" << std::endl;
 	for (int i = 0; i < MAX_SIZE; i++)
 		v.push_back(rand() % RAND_MAX);
 	v.clear();
 	print_details(v);
 	for (int i = 0; i < MAX_SIZE; i++)
 		v.push_back(rand() % RAND_MAX);
+	print_details(v);
+	v.clear();
 	print_details(v);
 	std::cout << "\n************** END **************\n" << std::endl;
 }
@@ -152,7 +218,7 @@ void	testing_assign()
 	v2.assign(v1.begin(), v1.end());
 	print_details(v1);
 	print_details(v2);
-	v1.assign(rand() % RAND_MAX, rand() % MAX_SIZE);
+	v1.assign(rand() % MAX_SIZE, rand() % RAND_MAX);
 	v2.assign(v1.begin(), v1.end());
 	print_details(v1);
 	print_details(v2);
@@ -165,12 +231,30 @@ void	testing_assign()
 	std::cout << "\n************** END **************\n" << std::endl;
 }
 
+void	testing_constructors()
+{
+	ft::vector<std::string> basic;
+	basic.push_back("foo");
+	basic.push_back("bar");
+	basic.push_back("baz");
+	ft::vector<std::string> fill (42, "lol");
+	ft::vector<std::string> range (fill.begin(), fill.end());
+	range.push_back("mdr");
+	ft::vector<std::string> copy (basic);
+	copy.pop_back();
+	print_details(basic);
+	print_details(fill);
+	print_details(range);
+	print_details(copy);
+}
+
 int main ()
 {
 
 	ft::vector<int> m; // just testing ints here
 	// first thing to test: modifiers with basic constructors // faire des try catch ?
-	
+	srand(SEED);
+
 	std::cout << ">>>>>>>>>>>>>>>> TESTING vector <<<<<<<<<<<<<<<<<" << std::endl;
 	// from now on size(), iterator, reverse iterator and basic constructor are required
 	// size, max_size, capacity, empty and []
@@ -179,6 +263,9 @@ int main ()
 	testing_insert();
 	testing_erase();
 	testing_swap();
+	testing_clear();
+	testing_reserve();
+	testing_at();
 	std::cout << ">>>>>>>>>>>>>>>> END vector TESTS <<<<<<<<<<<<<<<<<" << std::endl;
 
 	return (0);

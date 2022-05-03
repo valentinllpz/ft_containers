@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   map_tests.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: valentin <valentin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: vlugand- <vlugand-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/18 00:19:36 by vlugand-          #+#    #+#             */
-/*   Updated: 2022/04/25 00:36:21 by valentin         ###   ########.fr       */
+/*   Updated: 2022/05/03 00:36:59 by vlugand-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,11 @@
 
 #define	MAX_SIZE 2048 // INT VALUE ONLY
 
-void	print_details(ft::map<int,int> &m)
+template <typename T, typename U>
+void	print_details(ft::map<T,U> &m)
 {
 	std::cout << "printing content: " << std::endl;
-	for (ft::map<int,int>::iterator it = m.begin(); it != m.end(); it++)
+	for (typename ft::map<T,U>::iterator it = m.begin(); it != m.end(); it++)
 		std::cout << "[" << it->first << "] [" << it->second << "]" << std::endl;
 	std::cout << "size = " << m.size() << std::endl; 
 	if (m.empty())
@@ -334,6 +335,28 @@ void	testing_getalloc()
 	std::cout << "\n************** END **************\n" << std::endl;
 }
 
+void	testing_constructors()
+{
+	std::cout << "\n********* testing_constructors() *********\n" << std::endl;
+	
+	ft::map<char,int> basic;
+	basic['a']=10;
+	basic['b']=30;
+	basic['c']=50;
+	basic['d']=70;
+
+	ft::map<char,int> range(basic.begin(),basic.end());
+	basic['e']=42;
+
+	ft::map<char,int> copy(range);
+	basic['f']=420;
+
+	print_details(basic);
+	print_details(range);
+	print_details(copy);
+	std::cout << "\n************** END **************\n" << std::endl;
+}
+
 int main ()
 {
 
@@ -342,6 +365,7 @@ int main ()
 	
 	std::cout << ">>>>>>>>>>>>>>>> TESTING MAP <<<<<<<<<<<<<<<<<" << std::endl;
 	// from now on size(), iterator, reverse iterator and basic constructor are required
+	
 	testing_insert(); // you need to use key comp and / or value comp as underlaying comparison tool
 	// from now on insert() is required
 	testing_erase();
@@ -358,8 +382,7 @@ int main ()
 	testing_bounds();
 	testing_range();
 	testing_getalloc();
-
-	// forgot constructors
+	testing_constructors();
 
 	std::cout << ">>>>>>>>>>>>>>>> END MAP TESTS <<<<<<<<<<<<<<<<<" << std::endl;
 

@@ -6,7 +6,7 @@
 /*   By: vlugand- <vlugand-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 13:16:39 by vlugand-          #+#    #+#             */
-/*   Updated: 2022/03/17 19:49:42 by vlugand-         ###   ########.fr       */
+/*   Updated: 2022/05/02 21:36:00 by vlugand-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -327,31 +327,28 @@ namespace ft
 				_size += n;
 			}
 
-			iterator	erase(iterator position) { return (erase(position, position + 1));	}
+			iterator	erase(iterator it)
+			{
+				iterator last = end();
+				iterator tmp = it;
+
+				while (tmp != (last - 1))
+				{
+					_array[tmp - begin()] = *(tmp + 1); 
+					tmp++;
+				}
+				_alloc.destroy(&_array[tmp - begin()]);
+				_size--;
+				return it;
+			}
 
 			iterator	erase(iterator first, iterator last)
 			{
-				size_type	first_index = 0;
-				size_type	last_index = 0;
-				size_type	last_to_end = 0;
-				
-				for (iterator it = begin(); it != first; it++)
-					first_index++;
-				for (iterator it = begin(); it != last; it++)
-					last_index++;
-				for (iterator it = last; it != end(); it++)
-					last_to_end++;
-				for (size_type i = first_index, j = 0; i < _size; i++, j++)
-				{
-					_alloc.destroy(&_array[i]);
-					if (last != end())
-						_alloc.construct(&_array[i], _array[last_index + j]);
-				}
-				for (size_type i = first_index + last_to_end; i < _size; i++)
-					_alloc.destroy(&_array[i]);
-				_size -= last_index - first_index;
-				
-				return (first);
+				std::ptrdiff_t	range = last - first;
+
+				for (std::ptrdiff_t i(0); i < range; i++)
+					erase(first);
+				return first;
 			}
 
 			void	swap(vector& x)
@@ -422,6 +419,6 @@ namespace ft
 		template <class T, class Alloc>
 		void swap (vector<T,Alloc>& x, vector<T,Alloc>& y) { x.swap(y); }
 
-};
+}
 
 #endif
