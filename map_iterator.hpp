@@ -137,14 +137,17 @@ namespace ft
 				_node = src._node;
 				return (*this);
 			}
-
-		// Comparison operators:
-
-			bool	operator==(const map_iterator& lhs) { return (_node == lhs.base()); };
-			
-			bool	operator!=(const map_iterator& lhs) { return (_node != lhs.base()); };
-
 	};
+
+	/* ************************************************************************** */
+	/*                     	 NON-MEMBER FUNCTION OVERLOADS                        */
+	/* ************************************************************************** */
+
+	template<typename it1, typename it2, typename np>
+	bool operator==(const map_iterator<it1, np>& a, const map_iterator<it2, np>& b) { return (a.base() == b.base()); }
+
+	template<typename it1, typename it2, typename np>
+	bool operator!=(const map_iterator<it1,np>& a, const map_iterator<it2, np>& b) { return (a.base() != b.base()); }
 }
 
 #endif
