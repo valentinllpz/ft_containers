@@ -74,7 +74,7 @@ namespace ft
 				}
 			}
 
-			vector(const vector& x) : _alloc(x._alloc), _size(x._size), _capacity(x._capacity), _max_size(x.max_size())
+			vector(const vector& x) : _alloc(x._alloc), _size(x._size), _capacity(x._size), _max_size(x.max_size())
 			{
 				_array = _alloc.allocate(_capacity);
 				for (size_type i = 0; i < _size; i++)

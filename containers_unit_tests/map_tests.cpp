@@ -13,6 +13,8 @@
 #include <iostream>
 #include <ctime>
 #include <cstdlib>
+#include <string>
+#include <sstream>
 
 #ifdef STL
 	#include <map>
@@ -23,6 +25,14 @@
 
 #define	MAX_SIZE 10000 // INT VALUE ONLY
 #define SEED 42
+
+std::string		itoa_cpp(int nb)
+{
+	std::stringstream	out;
+
+	out << nb;
+	return (out.str());
+}
 
 template <typename T, typename U>
 void	print_details(ft::map<T,U> &m)
@@ -105,19 +115,19 @@ void	testing_clear()
 
 void	testing_swap()
 {
-	ft::map<int,int> m;
-	ft::map<int,int> mbis;
+	ft::map<std::string,std::string> m;
+	ft::map<std::string,std::string> mbis;
 
 	std::cout << "\n********* testing_swap() *********\n" << std::endl;
 	for (int i = 0; i < MAX_SIZE; i++)
-		m.insert(ft::make_pair(rand() % RAND_MAX, rand() % RAND_MAX));
+		m.insert(ft::make_pair(itoa_cpp(rand() % MAX_SIZE), itoa_cpp(rand() % MAX_SIZE)));
 	for (int i = 0; i < MAX_SIZE; i++)
-		mbis.insert(ft::make_pair(rand() % RAND_MAX, rand() % RAND_MAX));
+		mbis.insert(ft::make_pair(itoa_cpp(rand() % MAX_SIZE), itoa_cpp(rand() % MAX_SIZE)));
 	m.swap(mbis);
-	m.insert(ft::make_pair(rand() % RAND_MAX, rand() % RAND_MAX));
-	m.erase(rand() % MAX_SIZE);
-	m.insert(ft::make_pair(rand() % RAND_MAX, rand() % RAND_MAX));
-	mbis.erase(rand() % MAX_SIZE);
+	m.insert(ft::make_pair(itoa_cpp(rand() % MAX_SIZE), itoa_cpp(rand() % MAX_SIZE)));
+	while (m.erase(itoa_cpp(rand() % MAX_SIZE)) == 0);
+	m.insert(ft::make_pair(itoa_cpp(rand() % MAX_SIZE), itoa_cpp(rand() % MAX_SIZE)));
+	while (mbis.erase(itoa_cpp(rand() % MAX_SIZE)) == 0);
 	std::cout << "\nm after swap:" << std::endl;
 	print_details(m);
 	std::cout << "\nmbis after swap:" << std::endl;
@@ -366,6 +376,28 @@ void	testing_constructors()
 	std::cout << "\n************** END **************\n" << std::endl;
 }
 
+void	testing_relational_op()
+{
+	ft::map<std::string,int> m;
+	ft::map<std::string,int> mbis;
+
+	std::cout << "\n********* testing_relational_op() *********\n" << std::endl;
+	for (int i = 0; i < MAX_SIZE; i++)
+		m.insert(ft::make_pair(itoa_cpp(rand() % MAX_SIZE), rand() % MAX_SIZE));
+	mbis = m;
+	if (m == mbis)
+		std::cout << "m == mbis" << std::endl;
+	for (int i = 0; i < MAX_SIZE; i++)
+		mbis.insert(ft::make_pair(itoa_cpp(rand() % MAX_SIZE), rand() % MAX_SIZE));
+	if (m != mbis)
+		std::cout << "m != mbis" << std::endl;
+	if (m <= mbis)
+		std::cout << "m <= mbis" << std::endl;
+	if (m >= mbis)
+		std::cout << "m >= mbis" << std::endl;
+	std::cout << "\n************** END **************\n" << std::endl;
+}
+
 int main ()
 {
 	srand(SEED);
@@ -390,6 +422,7 @@ int main ()
 	testing_range();
 	testing_getalloc();
 	testing_constructors();
+	testing_relational_op();
 
 	std::cout << ">>>>>>>>>>>>>>>> END MAP TESTS <<<<<<<<<<<<<<<<<" << std::endl;
 

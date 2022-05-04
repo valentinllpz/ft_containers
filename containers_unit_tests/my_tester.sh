@@ -65,7 +65,7 @@ function testing_vector {
 
 function testing_stack {
     printf "${BRIGHT}${POWDER_BLUE}\n/* ************************************************************************** */\n"
-	printf "/*                                  STACK                                    */\n"
+	printf "/*                                   STACK                                    */\n"
     printf "/* ************************************************************************** */\n${NORMAL}"
     printf "\n\U1F4D8 Running tests with the STL... "
     time (g++ -fsanitize=address -g3 -std=c++98 -Wall -Werror -Wextra -DSTL stack_tests.cpp && ./a.out > stack_stl_output.log & spinner) 

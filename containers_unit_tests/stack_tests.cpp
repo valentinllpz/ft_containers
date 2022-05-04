@@ -26,7 +26,7 @@
     #include "../vector.hpp"
 #endif
 
-#define	MAX_SIZE 10000 // INT VALUE ONLY
+#define	MAX_SIZE 300000 // INT VALUE ONLY
 #define SEED 42
 
 template <typename T>
@@ -68,11 +68,34 @@ void    testing_all()
     print_details(s2);
 }
 
+void	testing_relational_op()
+{
+	ft::stack<std::string> s;
+	ft::stack<std::string> sbis;
+
+	std::cout << "\n********* testing_relational_op() *********\n" << std::endl;
+	for (int i = 0; i < MAX_SIZE; i++)
+		s.push(itoa_cpp(rand() % RAND_MAX));
+	sbis = s;
+	if (s == sbis)
+		std::cout << "s == sbis" << std::endl;
+	for (int i = 0; i < MAX_SIZE; i++)
+		s.push(itoa_cpp(rand() % RAND_MAX));
+	if (s != sbis)
+		std::cout << "s != sbis" << std::endl;
+	if (s <= sbis)
+		std::cout << "s <= sbis" << std::endl;
+	if (s >= sbis)
+		std::cout << "s >= sbis" << std::endl;
+	std::cout << "\n************** END **************\n" << std::endl;
+}
+
 int main ()
 {
 	srand(SEED);
 	std::cout << ">>>>>>>>>>>>>>>> TESTING stack <<<<<<<<<<<<<<<<<" << std::endl;
 	testing_all();
+    testing_relational_op();
 	std::cout << ">>>>>>>>>>>>>>>> END stack TESTS <<<<<<<<<<<<<<<<<" << std::endl;
 
 	return (0);
