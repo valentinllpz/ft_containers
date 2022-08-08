@@ -8,6 +8,8 @@ This [42](https://42.fr/en/homepage/) project aims to make us learn and understa
 
 We must to use a [self-balancing binary search tree](https://en.wikipedia.org/wiki/Self-balancing_binary_search_tree) in our `map` implementation. Original `map` container from STL uses a [Red-Black Tree](https://en.wikipedia.org/wiki/Red%E2%80%93black_tree) as its inner data structure. I decided to use an [AVL Tree](https://en.wikipedia.org/wiki/AVL_tree) because it seemed easier to implement at first glance. Using an AVL will reduce speed at both insertion and removal (due to rotations for balancing), but it should find elements quicker.
 
+I also made a [tester](https://github.com/valentinllpz/containers_unit_tests) for this project.
+
 ## 🧭 Usage
 
 1. Clone this repo and access it with `cd`
